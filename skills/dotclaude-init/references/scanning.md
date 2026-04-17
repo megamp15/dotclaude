@@ -40,7 +40,7 @@ Grep repo for known hostnames and env var names. Map each hit to a candidate MCP
 
 | Hostname / env var | Candidate MCP |
 |---|---|
-| `api.github.com`, `GITHUB_TOKEN` | github (opt-in) |
+| `api.github.com`, `GITHUB_TOKEN`, `.github/` dir | github (opt-in) |
 | `POSTGRES_URL`, `DATABASE_URL`, `psycopg`, `asyncpg` | postgres |
 | `sqlite3`, `*.db`, `*.sqlite` | sqlite |
 | `REDIS_URL` | redis |
@@ -49,6 +49,21 @@ Grep repo for known hostnames and env var names. Map each hit to a candidate MCP
 | `*.sentry.io`, `SENTRY_DSN` | sentry (free tier works) |
 | `hooks.slack.com`, `SLACK_TOKEN` | slack (if a free MCP exists) |
 | Other `api.*.com` hosts | propose context7 for their docs |
+
+## MCP recommendation rules
+
+Beyond per-service matches above, these broader triggers propose MCPs:
+
+| Signal | Propose |
+|---|---|
+| Any recognized framework (Next, Django, FastAPI, Rails, Spring, etc.) | `context7` (opt-in) — for current framework docs |
+| Project is a frontend/webapp (React/Vue/Svelte/Next + a dev server) | `chrome-devtools` (opt-in) — heavy context, so off by default |
+| Project has a `.github/` directory or GitHub remote | `github` (opt-in) — requires PAT |
+| Project uses local Postgres for dev (detected above) | `postgres` (opt-in) — stack-scoped |
+
+The always-on core MCPs (`filesystem`, `fetch`, `git`, `memory`,
+`sequential-thinking`, `time`) go in every project regardless of stack.
+See `core/mcp/README.md` for the full list.
 
 ## Existing `.claude/` detection
 

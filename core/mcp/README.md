@@ -41,6 +41,18 @@ core/mcp/
 | Server | Credential | Opt-in trigger |
 |---|---|---|
 | `github` | `GITHUB_PERSONAL_ACCESS_TOKEN` env var | Interview confirms project is on GitHub |
+| `context7` | Optional `CONTEXT7_API_KEY` for higher rate limits | Interview confirms project uses a framework likely to need current library docs (Next, Prisma, Django, etc.) or user explicitly opts in |
+| `chrome-devtools` | none | Interview confirms frontend/web-app work is the current focus. Heavy context footprint (~17k tokens); opt-in only when needed |
+
+## Usage skills
+
+Every optional MCP has a matching skill in `core/mcp/skills/<name>-mcp/SKILL.md`
+explaining when to use it, when not to, and common pitfalls. The init skill
+copies the matching usage skills into the target project only when the MCP
+itself is opted in.
+
+Sequential thinking is always-on, but has its own usage skill too —
+overusing it is a common failure mode.
 
 ## Adding a new core MCP
 

@@ -1,0 +1,9 @@
+{
+  "_comment": "source: core/mcp/optional — Chrome DevTools MCP. Heavy context footprint (~17k tokens, 26 tools). Opt-in only when frontend/webapp work actively needs it. Prefer launching Claude with --mcp-config to scope to specific sessions.",
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest"]
+    }
+  }
+}

@@ -14,19 +14,33 @@ this repo so future syncs know what's safe to refresh.
 
 ```
 dotclaude/
-├── core/                     # universal — applies to every project
-│   └── mcp/                  # always-on MCP servers + opt-in ones (github, etc.)
-├── stacks/                   # per-language layers
+├── core/                                # universal — applies to every project
+│   ├── CLAUDE.base.md                   # universal instructions, principles, guardrails
+│   ├── settings.partial.json            # universal permissions + hook registration
+│   ├── rules/                           # code-quality, testing, security, git,
+│   │                                    # design-patterns, software-principles
+│   ├── skills/                          # pr-review, debug-fix, ship, tdd,
+│   │                                    # refactor, explain, test-writer, commit
+│   ├── agents/                          # code-reviewer, security-reviewer,
+│   │                                    # performance-reviewer, doc-reviewer, architect
+│   ├── hooks/                           # block-dangerous-commands, protect-files,
+│   │                                    # scan-secrets, warn-large-files,
+│   │                                    # session-start, notify
+│   └── mcp/                             # filesystem, fetch, git, memory,
+│       ├── mcp.partial.json             # sequential-thinking, time  (always-on)
+│       ├── optional/                    # github, context7, chrome-devtools (opt-in)
+│       └── skills/                      # usage skill per MCP server
+├── stacks/                              # per-language layers
 │   └── python/
 │       ├── CLAUDE.stack.md
 │       ├── settings.partial.json
-│       ├── rules/            # python-style
-│       ├── skills/           # pytest-debug, uv-deps
-│       ├── agents/           # python-reviewer
-│       ├── hooks/            # ruff-format
-│       └── mcp/              # postgres, sqlite (opt-in)
+│       ├── rules/                       # python-style
+│       ├── skills/                      # pytest-debug, uv-deps
+│       ├── agents/                      # python-reviewer
+│       ├── hooks/                       # ruff-format
+│       └── mcp/                         # postgres, sqlite (opt-in)
 └── skills/
-    └── dotclaude-init/       # the init skill (scan → interview → merge)
+    └── dotclaude-init/                  # the init skill (scan → interview → merge)
         ├── SKILL.md
         └── references/
             ├── scanning.md

@@ -1,0 +1,12 @@
+{
+  "_comment": "source: core/mcp/optional — Context7 MCP. Free tier works without key; higher rate limit with CONTEXT7_API_KEY. Preferred for library docs (React, Next.js, Prisma, etc.) over general web search.",
+  "mcpServers": {
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+      }
+    }
+  }
+}
