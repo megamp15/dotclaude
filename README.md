@@ -18,27 +18,53 @@ dotclaude/
 │   ├── CLAUDE.base.md                   # universal instructions, principles, guardrails
 │   ├── settings.partial.json            # universal permissions + hook registration
 │   ├── rules/                           # code-quality, testing, security, git,
-│   │                                    # design-patterns, software-principles
+│   │                                    # design-patterns, software-principles,
+│   │                                    # error-handling, database, observability,
+│   │                                    # dependencies, documentation
 │   ├── skills/                          # pr-review, debug-fix, ship, tdd,
-│   │                                    # refactor, explain, test-writer, commit
+│   │                                    # refactor, explain, test-writer, commit,
+│   │                                    # security-audit, hotfix
 │   ├── agents/                          # code-reviewer, security-reviewer,
-│   │                                    # performance-reviewer, doc-reviewer, architect
+│   │                                    # performance-reviewer, doc-reviewer,
+│   │                                    # architect, code-searcher
 │   ├── hooks/                           # block-dangerous-commands, protect-files,
 │   │                                    # scan-secrets, warn-large-files,
-│   │                                    # session-start, notify
+│   │                                    # session-start, notify, format-on-save,
+│   │                                    # auto-test, context-recovery
+│   ├── templates/                       # CLAUDE.local.md, settings.local.json  (one-shot copy)
 │   └── mcp/                             # filesystem, fetch, git, memory,
 │       ├── mcp.partial.json             # sequential-thinking, time  (always-on)
 │       ├── optional/                    # github, context7, chrome-devtools (opt-in)
 │       └── skills/                      # usage skill per MCP server
-├── stacks/                              # per-language layers
-│   └── python/
+│
+├── stacks/                              # layered — language + infra, pick all that apply
+│   ├── python/                          # pyproject / requirements.txt
+│   │   ├── CLAUDE.stack.md
+│   │   ├── settings.partial.json
+│   │   ├── rules/                       # python-style, async-patterns (MagicStack-flavored)
+│   │   ├── skills/                      # pytest-debug, uv-deps
+│   │   ├── agents/                      # python-reviewer
+│   │   ├── hooks/                       # ruff-format
+│   │   └── mcp/                         # postgres, sqlite (opt-in)
+│   ├── node-ts/                         # package.json / tsconfig
+│   │   ├── CLAUDE.stack.md
+│   │   ├── settings.partial.json
+│   │   ├── rules/                       # ts-style
+│   │   ├── skills/                      # vitest-debug
+│   │   ├── agents/                      # ts-reviewer
+│   │   └── hooks/                       # format-prettier
+│   ├── docker/                          # Dockerfile / docker-compose.yml
+│   │   ├── CLAUDE.stack.md
+│   │   ├── settings.partial.json
+│   │   ├── rules/                       # dockerfile-best-practices, compose-patterns
+│   │   └── skills/                      # container-debug
+│   └── terraform/                       # *.tf / .terraform.lock.hcl
 │       ├── CLAUDE.stack.md
 │       ├── settings.partial.json
-│       ├── rules/                       # python-style
-│       ├── skills/                      # pytest-debug, uv-deps
-│       ├── agents/                      # python-reviewer
-│       ├── hooks/                       # ruff-format
-│       └── mcp/                         # postgres, sqlite (opt-in)
+│       ├── rules/                       # state-safety
+│       ├── skills/                      # tf-plan-review
+│       └── hooks/                       # block-destroy-apply
+│
 └── skills/
     └── dotclaude-init/                  # the init skill (scan → interview → merge)
         ├── SKILL.md
@@ -47,6 +73,12 @@ dotclaude/
             ├── interview.md
             └── merge.md
 ```
+
+Stacks are **layered**, not exclusive. A Python API that runs in Docker
+under Kubernetes infra managed by Terraform in a GitHub Actions pipeline
+gets rules from `python`, `docker`, `kubernetes`, `terraform`, and
+`github-actions` — all of them. Infra stacks don't conflict with language
+stacks.
 
 `core/` and `stacks/` are **sources**. They never get copied wholesale —
 the init skill merges the pieces it needs into the target repo's

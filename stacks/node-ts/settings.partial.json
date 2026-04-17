@@ -1,0 +1,40 @@
+{
+  "_comment": "source: stacks/node-ts — deep-merged with core. Adds JS/TS tool allowlists and registers the prettier format hook at the stack level.",
+  "permissions": {
+    "allow": [
+      "Bash(pnpm:*)",
+      "Bash(npm:*)",
+      "Bash(yarn:*)",
+      "Bash(bun:*)",
+      "Bash(npx:*)",
+      "Bash(pnpm dlx:*)",
+      "Bash(node:*)",
+      "Bash(tsc:*)",
+      "Bash(tsx:*)",
+      "Bash(vitest:*)",
+      "Bash(jest:*)",
+      "Bash(eslint:*)",
+      "Bash(prettier:*)"
+    ],
+    "deny": [
+      "Bash(npm publish:*)",
+      "Bash(pnpm publish:*)",
+      "Bash(yarn publish:*)",
+      "Bash(npm:* --force)",
+      "Bash(pnpm:* --force)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/format-prettier.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

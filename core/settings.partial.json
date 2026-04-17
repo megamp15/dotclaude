@@ -59,6 +59,14 @@
           {
             "type": "command",
             "command": ".claude/hooks/warn-large-files.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/format-on-save.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/auto-test.sh"
           }
         ]
       }
@@ -69,6 +77,10 @@
           {
             "type": "command",
             "command": ".claude/hooks/session-start.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/context-recovery.sh"
           }
         ]
       }

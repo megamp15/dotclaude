@@ -1,0 +1,43 @@
+{
+  "_comment": "source: stacks/terraform — deep-merged with core. Allows read-only and plan ops; denies destroy/apply-auto variants. The block-destroy-apply hook adds defense-in-depth at the hook layer.",
+  "permissions": {
+    "allow": [
+      "Bash(terraform fmt:*)",
+      "Bash(terraform validate:*)",
+      "Bash(terraform init:*)",
+      "Bash(terraform plan:*)",
+      "Bash(terraform show:*)",
+      "Bash(terraform output:*)",
+      "Bash(terraform providers:*)",
+      "Bash(terraform version)",
+      "Bash(terraform workspace list)",
+      "Bash(terraform workspace show)",
+      "Bash(tflint:*)",
+      "Bash(tfsec:*)",
+      "Bash(checkov:*)"
+    ],
+    "deny": [
+      "Bash(terraform destroy:*)",
+      "Bash(terraform apply:* -auto-approve:*)",
+      "Bash(terraform apply -auto-approve:*)",
+      "Bash(terraform state rm:*)",
+      "Bash(terraform state mv:*)",
+      "Bash(terraform taint:*)",
+      "Bash(terraform workspace delete:*)",
+      "Bash(terraform force-unlock:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/block-destroy-apply.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

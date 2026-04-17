@@ -1,0 +1,17 @@
+{
+  "_comment": "source: core/templates — copy to .claude/settings.local.json in a target project. Gitignored. Per-developer overrides that DO NOT belong in the shared settings.json. Common use: personal permission exceptions, local hook toggles, local MCP endpoints.",
+  "permissions": {
+    "allow": [
+      "Bash(docker compose up:*)",
+      "Bash(docker compose down:*)"
+    ],
+    "deny": []
+  },
+  "env": {
+    "CLAUDE_AUTO_TEST": "0",
+    "CLAUDE_NOTIFY": "1"
+  },
+  "hooks": {
+    "_comment": "Add per-developer hooks here. Don't duplicate shared hooks — they come from the committed settings.json."
+  }
+}

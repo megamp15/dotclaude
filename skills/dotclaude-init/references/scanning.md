@@ -4,16 +4,35 @@ Read-only detection. Never mutates files. Runs before any question is asked.
 
 ## Stack detection
 
+Stacks are **layered**, not mutually exclusive. A project can legitimately be
+`python + docker + terraform + github-actions` and should get rules from all
+four. Pick the language stack as primary; layer infra stacks on top.
+
+### Language stacks
+
 | Evidence | Stack |
 |---|---|
 | `pyproject.toml`, `requirements.txt`, `setup.py`, or `*.py` at root | `python` |
 | `package.json` with `typescript` / `@types/*` in deps, or `tsconfig.json` | `node-ts` |
-| `package.json` without TS | `node-js` |
+| `package.json` without TS | `node-ts` (still recommended — TS rules degrade gracefully to JS) |
 | `go.mod` | `go` |
 | `Cargo.toml` | `rust` |
 | `Gemfile` | `ruby` |
 | `pom.xml` or `build.gradle*` | `jvm` |
-| Multiple of the above | prompt user to pick primary or enable multi-stack |
+| `*.csproj`, `*.sln`, `global.json` | `dotnet` |
+
+### Infrastructure / platform stacks (additive)
+
+| Evidence | Stack |
+|---|---|
+| `Dockerfile`, `*.Dockerfile`, `docker-compose*.y*ml`, `compose*.y*ml` | `docker` |
+| `*.tf`, `*.tfvars`, `.terraform.lock.hcl` | `terraform` |
+| `.github/workflows/*.y*ml` | `github-actions` |
+| Kubernetes manifests (`kind: Deployment`, `kind: Service` in yaml) | `kubernetes` |
+| `aws-cdk.json`, `cdk.json`, `serverless.yml`, `samconfig.toml` | `aws` |
+
+Apply every matching infra stack — their rules don't conflict with the
+language stack's.
 
 ## Framework detection (within a stack)
 

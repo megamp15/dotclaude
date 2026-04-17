@@ -1,0 +1,41 @@
+<!--
+source: core/templates — copy to `.claude/CLAUDE.local.md` in a target project.
+
+CLAUDE.local.md is the per-developer, uncommitted overrides file.
+Gitignored. Purpose: your personal context that doesn't belong in the
+shared `.claude/CLAUDE.md`.
+
+Use this for:
+  - Local service URLs (http://localhost:8080 vs the prod domain)
+  - Your personal working notes about this project
+  - Temporary reminders while you're heads-down on a feature
+  - Credentials hints (NEVER actual credentials — just "token is in 1Password 'foo'")
+  - "Currently debugging X; if Claude notices Y, it's related"
+
+Do NOT use this for:
+  - Actual secrets — those belong in env vars / your secrets manager
+  - Rules the whole team should follow — those go in rules/ (shared)
+  - Project-wide architecture notes — those go in CLAUDE.md (shared)
+-->
+
+# Local overrides for <project>
+
+## Environment
+
+- API runs locally at: http://localhost:<port>
+- DB: <local container name / connection hint>
+- Secrets: see `~/.env.<project>` (gitignored)
+
+## Current focus
+
+<!-- Replace with whatever you're working on. Claude will pick this up. -->
+
+- Working on: <ticket / feature / bug>
+- Open threads: <thing you'll come back to>
+
+## Personal preferences for this project
+
+<!-- e.g. -->
+- When I ask for "the usual test run", I mean `pytest tests/unit -x`.
+- Don't auto-run migrations in this project; I run them manually.
+- Prefer `uv run` over activating the venv.
