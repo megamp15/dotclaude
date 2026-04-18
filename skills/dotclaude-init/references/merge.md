@@ -57,6 +57,11 @@ If a target file exists with `source:` matching current source, and content diff
 
 Never silently overwrite user edits.
 
+For a full-fidelity refresh against an already-initialized repo, use
+`dotclaude-sync` instead of re-running init. Sync's drift handling is
+the authoritative rule set; see
+[`skills/dotclaude-sync/references/drift-handling.md`](../../dotclaude-sync/references/drift-handling.md).
+
 ## Idempotency guarantees
 
 - Same inputs → same outputs (byte-identical).

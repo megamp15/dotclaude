@@ -66,12 +66,18 @@ dotclaude/
 │       └── hooks/                       # block-destroy-apply
 │
 └── skills/
-    └── dotclaude-init/                  # the init skill (scan → interview → merge)
+    ├── dotclaude-init/                  # scan → interview → merge (first-time setup)
+    │   ├── SKILL.md
+    │   └── references/
+    │       ├── scanning.md
+    │       ├── interview.md
+    │       └── merge.md
+    └── dotclaude-sync/                  # refresh upstream content, preserve project-owned
         ├── SKILL.md
         └── references/
-            ├── scanning.md
-            ├── interview.md
-            └── merge.md
+            ├── classification.md
+            ├── update-rules.md
+            └── drift-handling.md
 ```
 
 Stacks are **layered**, not exclusive. A Python API that runs in Docker
@@ -168,14 +174,26 @@ The skill:
 
 Full rules in [`skills/dotclaude-init/SKILL.md`](skills/dotclaude-init/SKILL.md).
 
-### Sync upstream changes (planned)
+### Sync upstream changes
+
+From inside a target repo that was previously initialized:
 
 ```
 > /dotclaude-sync
 ```
 
-Refresh files that came from `core/` or `stacks/`; leave project-owned
-files alone. Driven off the `source:` tags.
+What happens:
+
+1. Classifies every file in `.claude/` as **upstream** (has a `source:` tag), **project-owned** (no tag), **template-seeded** (never synced after init), or **merged** (composite — `settings.json`, `.mcp.json`, `CLAUDE.md`).
+2. Compares upstream files against current `DOTCLAUDE_HOME`. Classifies as *unchanged*, *update*, *add*, *delete*, *drift*, or *stack-removed*.
+3. Presents a grouped plan, highest-risk first. Bulk-confirms safe operations; per-file confirms risky ones.
+4. Applies, writes a summary, leaves `git` as the rollback mechanism.
+
+Drift (a file you edited locally that also changed upstream) is never
+silently overwritten — sync asks: take upstream, keep local, or convert
+the file to project-owned (remove the `source:` tag).
+
+Full rules in [`skills/dotclaude-sync/SKILL.md`](skills/dotclaude-sync/SKILL.md).
 
 ### Audit drift (planned)
 
@@ -183,8 +201,8 @@ files alone. Driven off the `source:` tags.
 > /dotclaude-audit
 ```
 
-Report what's missing, outdated, or orphaned in a target's `.claude/`
-relative to the current `DOTCLAUDE_HOME`.
+Read-only dry-run of sync — report what would change without touching
+files. Useful for CI checks.
 
 ## Adding a new stack
 
