@@ -1,6 +1,6 @@
 # dotclaude
 
-A portable, layered Claude Code setup you can drop into any project on any
+A portable, layered AI-assistant setup you can drop into any project on any
 tech stack. Universal principles live in `core/`; language- and
 framework-specific pieces live in `stacks/`; anything unique to a particular
 repo is captured from an interview at init time and stays project-owned.
@@ -9,6 +9,14 @@ Running the `dotclaude-init` skill inside a target repo produces a flat
 `.claude/` directory shaped exactly the way Claude Code expects — merged
 from the three layers, with `source:` tags on every file that came from
 this repo so future syncs know what's safe to refresh.
+
+**The same canonical content renders to other agents too.** Cursor
+(`.cursor/rules/*.mdc`), GitHub Copilot (`.github/copilot-instructions.md`
++ path-scoped `.instructions.md`), OpenCode (`opencode.jsonc` +
+`.opencode/`), and the universal `AGENTS.md` standard are all produced by
+per-agent renderer skills that translate from the *same* `core/` and
+`stacks/` sources. You author rules once; every agent on your team reads
+them in its native format.
 
 ## What's in here
 
@@ -22,7 +30,7 @@ dotclaude/
 │   │                                    # error-handling, database, observability,
 │   │                                    # dependencies, documentation
 │   ├── skills/                          # pr-review, debug-fix, ship, tdd,
-│   │                                    # refactor, explain, test-writer, commit,
+│   │                                    # refactor, explain, test-writer, commit,`
 │   │                                    # security-audit, hotfix
 │   ├── agents/                          # code-reviewer, security-reviewer,
 │   │                                    # performance-reviewer, doc-reviewer,
@@ -65,19 +73,34 @@ dotclaude/
 │       ├── skills/                      # tf-plan-review
 │       └── hooks/                       # block-destroy-apply
 │
-└── skills/
-    ├── dotclaude-init/                  # scan → interview → merge (first-time setup)
+└── skills/                              # the framework itself — one skill per workflow
+    ├── dotclaude-init/                  # scan → interview → merge  (Claude Code target)
     │   ├── SKILL.md
     │   └── references/
     │       ├── scanning.md
     │       ├── interview.md
     │       └── merge.md
-    └── dotclaude-sync/                  # refresh upstream content, preserve project-owned
-        ├── SKILL.md
-        └── references/
-            ├── classification.md
-            ├── update-rules.md
-            └── drift-handling.md
+    ├── dotclaude-sync/                  # refresh upstream content, preserve project-owned
+    │   ├── SKILL.md
+    │   └── references/
+    │       ├── classification.md
+    │       ├── update-rules.md
+    │       └── drift-handling.md
+    │
+    │                                    # per-agent renderers — same sources, different targets
+    ├── dotclaude-init-cursor/           # → .cursor/rules/*.mdc + .cursor/mcp.json + AGENTS.md
+    │   ├── SKILL.md
+    │   └── references/
+    │       ├── mdc-format.md
+    │       └── translation.md
+    ├── dotclaude-init-copilot/          # → .github/copilot-instructions.md + .github/instructions/
+    │   ├── SKILL.md
+    │   └── references/translation.md
+    ├── dotclaude-init-opencode/         # → opencode.jsonc + .opencode/agents|command|instructions/
+    │   ├── SKILL.md
+    │   └── references/translation.md
+    └── dotclaude-init-agents-md/        # → AGENTS.md only (universal fallback)
+        └── SKILL.md
 ```
 
 Stacks are **layered**, not exclusive. A Python API that runs in Docker
@@ -195,6 +218,26 @@ the file to project-owned (remove the `source:` tag).
 
 Full rules in [`skills/dotclaude-sync/SKILL.md`](skills/dotclaude-sync/SKILL.md).
 
+### Render to a different agent
+
+When the project (or a teammate) uses Cursor, Copilot, OpenCode, or any
+agent that reads `AGENTS.md`, run the matching renderer instead of (or
+in addition to) `dotclaude-init`. All renderers read from the same
+`core/` + `stacks/` sources and ask the same interview questions.
+
+| Command | Target | Output |
+|---|---|---|
+| `/dotclaude-init` | Claude Code | `.claude/` (flat), `.mcp.json` |
+| `/dotclaude-init-cursor` | Cursor | `.cursor/rules/*.mdc`, `.cursor/mcp.json`, `AGENTS.md` |
+| `/dotclaude-init-copilot` | GitHub Copilot | `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md`, `AGENTS.md` |
+| `/dotclaude-init-opencode` | OpenCode | `opencode.jsonc`, `.opencode/{agents,command,instructions}/`, `AGENTS.md` |
+| `/dotclaude-init-agents-md` | Any agent | Single `AGENTS.md` at repo root (universal baseline) |
+
+Renderers compose — running `dotclaude-init` *and* `dotclaude-init-cursor`
+on the same repo is normal on teams that mix agents. Each renderer only
+writes to its own directory and cooperates on `AGENTS.md` via
+`<!-- project-start -->` / `<!-- project-end -->` markers.
+
 ### Audit drift (planned)
 
 ```
@@ -213,6 +256,51 @@ files. Useful for CI checks.
    [`skills/dotclaude-init/references/scanning.md`](skills/dotclaude-init/references/scanning.md)
    so the init skill picks it up automatically.
 
+## Multi-agent portability
+
+The framework is built around a single insight: **content is portable,
+structure isn't**. A good code-quality rule is a good code-quality rule
+whether it's loaded by Claude Code, Cursor, Copilot, or OpenCode. But
+how each tool *loads* that rule — frontmatter schema, directory layout,
+trigger mechanism — varies wildly.
+
+```
+                        ┌──────────────────────┐
+                        │  core/  +  stacks/   │   ← canonical sources
+                        │  (rules, skills,     │      (this repo)
+                        │   agents, hooks,     │
+                        │   MCP, interview)    │
+                        └──────────┬───────────┘
+                                   │
+                ┌──────────────────┼──────────────────────────┐
+                │                  │                  │       │
+                ▼                  ▼                  ▼       ▼
+         dotclaude-init  dotclaude-init-cursor  dotclaude-init-copilot  ...
+                │                  │                  │
+                ▼                  ▼                  ▼
+        .claude/ (flat)     .cursor/rules/      .github/instructions/
+        .mcp.json           .cursor/mcp.json    .github/copilot-instructions.md
+                            AGENTS.md           AGENTS.md
+```
+
+**What translates well** — rules, conventions, review lenses, MCP
+configs (with schema tweaks), project context.
+
+**What translates lossily** — skills (intent-triggered in Claude Code,
+often manual-invoke or prose elsewhere), subagents (first-class in Claude
+Code & OpenCode; manual rules in Cursor; merged prose in Copilot).
+
+**What doesn't translate at all** — hooks, fine-grained file/command
+permissions. Each renderer is explicit about what it dropped.
+
+Per-agent renderers cover:
+
+- **Claude Code** — [`dotclaude-init`](skills/dotclaude-init/SKILL.md), [`dotclaude-sync`](skills/dotclaude-sync/SKILL.md) (highest fidelity; native target)
+- **Cursor** — [`dotclaude-init-cursor`](skills/dotclaude-init-cursor/SKILL.md) (rules + MCP translate cleanly; hooks and subagent processes don't)
+- **GitHub Copilot** — [`dotclaude-init-copilot`](skills/dotclaude-init-copilot/SKILL.md) (simplest target; prose-only; 4000-char budget on code-review instructions)
+- **OpenCode** — [`dotclaude-init-opencode`](skills/dotclaude-init-opencode/SKILL.md) (second-highest fidelity; real subagents and slash commands)
+- **Any agent reading `AGENTS.md`** — [`dotclaude-init-agents-md`](skills/dotclaude-init-agents-md/SKILL.md) (universal baseline; works with Continue, Aider, Cline, Zed, and others)
+
 ## Design principles
 
 - **Scan, don't interrogate.** If grep can tell you the answer, don't ask.
@@ -220,6 +308,10 @@ files. Useful for CI checks.
   lives here.
 - **Source tags decide ownership.** Files with `source:` are ours to
   refresh; everything else is the project's.
+- **One truth, many surfaces.** Canonical content in `core/` + `stacks/`;
+  per-agent renderers translate into native formats.
+- **Lossy translation is named.** Every renderer prints what it dropped
+  and why. No silent feature loss.
 - **Free tier only in `core/` and stack MCPs.** Paid services are the
   user's responsibility.
 - **Idempotent.** Same inputs → byte-identical output.
