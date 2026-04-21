@@ -49,6 +49,17 @@ dotclaude/
 │   │                                    #                 options, memory & batching)
 │   │                                    #   homelab-infra/ (Proxmox/Talos bring-up,
 │   │                                    #                  networking, storage & backup)
+│   │                                    # + pro-level deep-dives (Jeffallan-adapted):
+│   │                                    #   data: postgres-pro, sql-pro
+│   │                                    #   ops: sre-engineer, monitoring-expert,
+│   │                                    #        chaos-engineer, debugging-wizard,
+│   │                                    #        legacy-modernizer
+│   │                                    #   testing: test-master, playwright-expert
+│   │                                    #   security: secure-code-guardian,
+│   │                                    #             security-reviewer (skill form)
+│   │                                    #   AI/ML: rag-architect, ml-pipeline,
+│   │                                    #          fine-tuning-expert, prompt-engineer
+│   │                                    #   realtime: websocket-engineer
 │   ├── conventions/                     # cross-cutting conventions (non-rule docs):
 │   │                                    #   ported-skills.md (provenance for skills
 │   │                                    #                     adapted from external sources)
@@ -70,7 +81,8 @@ dotclaude/
 │   │   ├── CLAUDE.stack.md
 │   │   ├── settings.partial.json
 │   │   ├── rules/                       # python-style, async-patterns (MagicStack-flavored)
-│   │   ├── skills/                      # pytest-debug, uv-deps
+│   │   ├── skills/                      # pytest-debug, uv-deps,
+│   │   │                                # python-pro (Jeffallan-adapted deep-dive)
 │   │   ├── agents/                      # python-reviewer
 │   │   ├── hooks/                       # ruff-format
 │   │   └── mcp/                         # postgres, sqlite (opt-in)
@@ -78,7 +90,8 @@ dotclaude/
 │   │   ├── CLAUDE.stack.md
 │   │   ├── settings.partial.json
 │   │   ├── rules/                       # ts-style
-│   │   ├── skills/                      # vitest-debug
+│   │   ├── skills/                      # vitest-debug,
+│   │   │                                # typescript-pro (Jeffallan-adapted deep-dive)
 │   │   ├── agents/                      # ts-reviewer
 │   │   └── hooks/                       # format-prettier
 │   ├── fastapi/                         # FastAPI + Pydantic V2 + async SQLAlchemy
@@ -95,7 +108,8 @@ dotclaude/
 │   │   ├── CLAUDE.stack.md
 │   │   ├── settings.partial.json
 │   │   ├── rules/                       # state-safety
-│   │   ├── skills/                      # tf-plan-review
+│   │   ├── skills/                      # tf-plan-review,
+│   │   │                                # terraform-engineer (Jeffallan-adapted)
 │   │   └── hooks/                       # block-destroy-apply
 │   │
 │   │                                    # frontend stacks (additive to node-ts or backend)
@@ -114,6 +128,8 @@ dotclaude/
 │   │
 │   │                                    # infra / CI stacks
 │   ├── kubernetes/                      # manifest hygiene, probes, PDB, RBAC
+│   │                                    #   + skills/kubernetes-specialist (Jeffallan-adapted:
+│   │                                    #     workloads, networking, storage, security, debug)
 │   ├── aws/                             # IAM least-privilege, tagging, cost discipline
 │   ├── github-actions/                  # workflow security (pin SHAs, OIDC, permissions)
 │   │
@@ -404,6 +420,26 @@ how sync treats them.
 | `core/skills/` | `spec-miner` | `spec-miner` |
 | `core/skills/` | `code-documenter` | `code-documenter` |
 | `core/skills/` | `fullstack-guardian` (thin) | `fullstack-guardian` |
+| `core/skills/` | `postgres-pro` | `postgres-pro` |
+| `core/skills/` | `sql-pro` | `sql-pro` |
+| `core/skills/` | `sre-engineer` | `sre-engineer` |
+| `core/skills/` | `monitoring-expert` | `monitoring-expert` |
+| `core/skills/` | `test-master` | `test-master` |
+| `core/skills/` | `playwright-expert` | `playwright-expert` |
+| `core/skills/` | `secure-code-guardian` | `secure-code-guardian` |
+| `core/skills/` | `security-reviewer` (skill form) | `security-reviewer` |
+| `core/skills/` | `rag-architect` | `rag-architect` |
+| `core/skills/` | `ml-pipeline` | `ml-pipeline` |
+| `core/skills/` | `fine-tuning-expert` | `fine-tuning-expert` |
+| `core/skills/` | `prompt-engineer` | `prompt-engineer` |
+| `core/skills/` | `websocket-engineer` | `websocket-engineer` |
+| `core/skills/` | `chaos-engineer` | `chaos-engineer` |
+| `core/skills/` | `debugging-wizard` | `debugging-wizard` |
+| `core/skills/` | `legacy-modernizer` | `legacy-modernizer` |
+| `stacks/python/skills/` | `python-pro` | `python-pro` |
+| `stacks/node-ts/skills/` | `typescript-pro` | `typescript-pro` |
+| `stacks/terraform/skills/` | `terraform-engineer` | `terraform-engineer` |
+| `stacks/kubernetes/skills/` | `kubernetes-specialist` | `kubernetes-specialist` |
 | `stacks/react/skills/` | `react-expert` | `react-expert` |
 | `stacks/nextjs/skills/` | `nextjs-developer` | `nextjs-developer` |
 | `stacks/angular/skills/` | `angular-architect` | `angular-architect` |
