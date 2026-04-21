@@ -32,11 +32,26 @@ dotclaude/
 │   ├── skills/                          # pr-review, debug-fix, ship, tdd,
 │   │                                    # refactor, explain, test-writer, commit,
 │   │                                    # security-audit, hotfix
+│   │                                    # + architecture / design skills:
+│   │                                    #   architecture-designer, cloud-architect,
+│   │                                    #   microservices-architect,
+│   │                                    #   api-designer, graphql-architect
+│   │                                    # + workflow / meta skills:
+│   │                                    #   feature-forge (greenfield spec workshop),
+│   │                                    #   spec-miner (reverse-engineer a spec),
+│   │                                    #   code-documenter (docstrings / OpenAPI / sites),
+│   │                                    #   fullstack-guardian (thin: feature across API + UI
+│   │                                    #     with security done end-to-end),
+│   │                                    #   the-fool (critical-reasoning modes: Socratic,
+│   │                                    #     pre-mortem, red team, evidence audit, dialectic)
 │   │                                    # + domain hubs (Jeffallan-style deep dives):
 │   │                                    #   llm-serving/  (model formats, serving
 │   │                                    #                 options, memory & batching)
 │   │                                    #   homelab-infra/ (Proxmox/Talos bring-up,
 │   │                                    #                  networking, storage & backup)
+│   ├── conventions/                     # cross-cutting conventions (non-rule docs):
+│   │                                    #   ported-skills.md (provenance for skills
+│   │                                    #                     adapted from external sources)
 │   ├── agents/                          # code-reviewer, security-reviewer,
 │   │                                    # performance-reviewer, doc-reviewer,
 │   │                                    # architect, code-searcher
@@ -66,6 +81,11 @@ dotclaude/
 │   │   ├── skills/                      # vitest-debug
 │   │   ├── agents/                      # ts-reviewer
 │   │   └── hooks/                       # format-prettier
+│   ├── fastapi/                         # FastAPI + Pydantic V2 + async SQLAlchemy
+│   │   ├── CLAUDE.stack.md
+│   │   ├── settings.partial.json
+│   │   ├── rules/                       # fastapi-patterns
+│   │   └── skills/                      # fastapi-expert (deep-dive, ported from Jeffallan)
 │   ├── docker/                          # Dockerfile / docker-compose.yml
 │   │   ├── CLAUDE.stack.md
 │   │   ├── settings.partial.json
@@ -80,7 +100,15 @@ dotclaude/
 │   │
 │   │                                    # frontend stacks (additive to node-ts or backend)
 │   ├── react/                           # React 19+ — react-patterns
+│   │                                    #   + skills/react-expert (Jeffallan-adapted deep-dive:
+│   │                                    #     RSC, React 19 actions, hooks design, perf, migration)
+│   ├── nextjs/                          # Next.js 14+ App Router — layers on react + node-ts
+│   │                                    #   CLAUDE.stack.md, settings.partial.json,
+│   │                                    #   rules/nextjs-patterns.md,
+│   │                                    #   skills/nextjs-developer (App Router + Server Actions)
 │   ├── angular/                         # Angular 17+ — signals, OnPush, standalone
+│   │                                    #   + skills/angular-architect (Jeffallan-adapted:
+│   │                                    #     NgRx createFeature, RxJS, functional guards)
 │   ├── htmx-alpine/                     # server-rendered HTML + hypermedia patterns
 │   ├── reflex/                          # Python full-stack (rx.State patterns)
 │   │
@@ -353,6 +381,41 @@ Per-agent renderers cover:
   user's responsibility.
 - **Idempotent.** Same inputs → byte-identical output.
 
+## Ported skills
+
+A subset of skills are **adapted** from
+[Jeffallan/claude-skills](https://github.com/Jeffallan/claude-skills) —
+rewritten in `dotclaude` voice and scope, with provenance tracked via
+frontmatter. See
+[`core/conventions/ported-skills.md`](core/conventions/ported-skills.md)
+for the convention and
+[`skills/dotclaude-sync/SKILL.md`](skills/dotclaude-sync/SKILL.md) for
+how sync treats them.
+
+| Location | Skill | Origin (Jeffallan) |
+|---|---|---|
+| `core/skills/` | `architecture-designer` | `architecture-designer` |
+| `core/skills/` | `cloud-architect` | `cloud-architect` |
+| `core/skills/` | `microservices-architect` | `microservices-architect` |
+| `core/skills/` | `api-designer` | `api-designer` |
+| `core/skills/` | `graphql-architect` | `graphql-architect` |
+| `core/skills/` | `the-fool` | `the-fool` |
+| `core/skills/` | `feature-forge` | `feature-forge` |
+| `core/skills/` | `spec-miner` | `spec-miner` |
+| `core/skills/` | `code-documenter` | `code-documenter` |
+| `core/skills/` | `fullstack-guardian` (thin) | `fullstack-guardian` |
+| `stacks/react/skills/` | `react-expert` | `react-expert` |
+| `stacks/nextjs/skills/` | `nextjs-developer` | `nextjs-developer` |
+| `stacks/angular/skills/` | `angular-architect` | `angular-architect` |
+| `stacks/fastapi/skills/` | `fastapi-expert` | `fastapi-expert` |
+
+Each adapted skill carries `ported-from:`, `ported-at:`, and
+`adapted: true` in its frontmatter so future syncs can diff against the
+upstream and decide whether to re-port. `dotclaude-sync` only pulls from
+`DOTCLAUDE_HOME` — upstream drift from Jeffallan's repo is surfaced
+manually (or, in the future, by a dedicated `dotclaude-upstream-check`
+skill).
+
 ## References & inspiration
 
 Ideas borrowed (not depended on) from:
@@ -360,4 +423,5 @@ Ideas borrowed (not depended on) from:
 - [anthropics/claude-code](https://github.com/anthropics/claude-code)
 - [centminmod/my-claude-code-setup](https://github.com/centminmod/my-claude-code-setup)
 - [Jeffallan/claude-skills](https://github.com/Jeffallan/claude-skills) —
-  skill-as-folder pattern, `triggers:` frontmatter, domain-hub skills.
+  skill-as-folder pattern, `triggers:` frontmatter, domain-hub skills,
+  and the adapted skills listed above.

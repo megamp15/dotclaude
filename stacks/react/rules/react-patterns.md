@@ -10,6 +10,11 @@ globs: ["**/*.tsx", "**/*.jsx", "**/components/**/*.ts", "**/hooks/**/*.ts"]
 
 The subset of React conventions worth enforcing as rules (vs. taste).
 
+> **See also:** `stacks/react/skills/react-expert/` — deep-dive skill for
+> Server Components, React 19 form actions (`useActionState`,
+> `useFormStatus`, `use()`), custom hook design, performance triage, and
+> class → modern migration.
+
 ## When to reach for what (state)
 
 ```

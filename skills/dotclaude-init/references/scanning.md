@@ -39,10 +39,17 @@ language stack's.
 | Evidence | Stack |
 |---|---|
 | `"react"` in `package.json` deps | `react` |
+| `"next"` in `package.json` deps, or `app/` dir with `layout.tsx` + `page.tsx`, or `next.config.{js,mjs,ts}` | `nextjs` (layers on top of `react` + `node-ts`) |
 | `"@angular/core"` in `package.json`, `angular.json` | `angular` |
 | `hx-get` / `hx-post` / `hx-target` attrs in templates; `htmx.org` in deps or a CDN `<script>` | `htmx-alpine` |
 | `x-data` / `x-show` / `x-on:` attrs; `alpinejs` in deps or CDN `<script>` | `htmx-alpine` |
 | `"reflex"` in `requirements.txt` / `pyproject.toml`, `rxconfig.py`, `import reflex as rx` | `reflex` |
+
+### Backend framework stacks (additive to their language stack)
+
+| Evidence | Stack |
+|---|---|
+| `from fastapi` / `import fastapi` / `FastAPI(` in `*.py`, or `fastapi` in `pyproject.toml` / `requirements.txt` | `fastapi` (layers on top of `python`) |
 
 ### ML / inference stacks (additive to python)
 
@@ -63,7 +70,7 @@ Grep the source files for import/config patterns:
 - `import torch`, `from transformers` → `ml`
 
 **Node**
-- `"next"` in package.json → `next`
+- `"next"` in package.json → `next` (also triggers `stacks/nextjs`)
 - `"react"` in package.json → `react` (also triggers `stacks/react`)
 - `"@angular/core"` in package.json → `angular` (also triggers `stacks/angular`)
 - `"@nestjs/core"` → `nestjs`

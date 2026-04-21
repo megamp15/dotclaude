@@ -1,0 +1,18 @@
+{
+  "_comment": "source: stacks/fastapi — permissions for FastAPI tooling. Layers on top of stacks/python permissions; do not duplicate uv/pytest/ruff/mypy here.",
+  "permissions": {
+    "allow": [
+      "Bash(uv run fastapi dev:*)",
+      "Bash(uv run uvicorn:*)",
+      "Bash(uv run gunicorn:*)",
+      "Bash(uv run alembic:*)",
+      "Bash(uv run httpx:*)",
+      "Bash(uvicorn app.main:app*)",
+      "Bash(alembic upgrade head)",
+      "Bash(alembic revision*)",
+      "Bash(alembic current)",
+      "Bash(alembic history)",
+      "Bash(alembic downgrade*)"
+    ]
+  }
+}

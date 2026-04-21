@@ -1,0 +1,21 @@
+{
+  "_comment": "source: stacks/nextjs — permissions for Next.js tooling. Layers on top of stacks/node-ts and stacks/react permissions; do not duplicate pnpm/npm/node/vite entries here.",
+  "permissions": {
+    "allow": [
+      "Bash(pnpm dlx create-next-app*)",
+      "Bash(npx create-next-app*)",
+      "Bash(pnpm next build)",
+      "Bash(pnpm next dev)",
+      "Bash(pnpm next start)",
+      "Bash(pnpm next lint)",
+      "Bash(npx next build)",
+      "Bash(npx next dev)",
+      "Bash(npx next start)",
+      "Bash(vercel env pull*)",
+      "Bash(vercel deploy*)",
+      "Bash(vercel dev*)",
+      "Bash(npx playwright test*)",
+      "Bash(pnpm test:e2e*)"
+    ]
+  }
+}
