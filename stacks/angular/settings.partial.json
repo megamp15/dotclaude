@@ -1,0 +1,20 @@
+{
+  "_comment": "source: stacks/angular — permissions for Angular CLI and adjacent tooling. Layers on top of stacks/node-ts.",
+  "permissions": {
+    "allow": [
+      "Bash(ng generate *)",
+      "Bash(ng new *)",
+      "Bash(ng serve*)",
+      "Bash(ng build*)",
+      "Bash(ng test*)",
+      "Bash(ng e2e*)",
+      "Bash(ng lint*)",
+      "Bash(ng update *)",
+      "Bash(ng add *)",
+      "Bash(ng config*)",
+      "Bash(ng version)",
+      "Bash(nx *)",
+      "Bash(npx @angular/cli*)"
+    ]
+  }
+}

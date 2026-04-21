@@ -28,11 +28,28 @@ four. Pick the language stack as primary; layer infra stacks on top.
 | `Dockerfile`, `*.Dockerfile`, `docker-compose*.y*ml`, `compose*.y*ml` | `docker` |
 | `*.tf`, `*.tfvars`, `.terraform.lock.hcl` | `terraform` |
 | `.github/workflows/*.y*ml` | `github-actions` |
-| Kubernetes manifests (`kind: Deployment`, `kind: Service` in yaml) | `kubernetes` |
-| `aws-cdk.json`, `cdk.json`, `serverless.yml`, `samconfig.toml` | `aws` |
+| `kind: Deployment`, `kind: Service`, `kind: StatefulSet`, `apiVersion: apps/v1` in yaml; or `kustomization.yaml`, `Chart.yaml`, `helmfile.yaml` | `kubernetes` |
+| `aws-cdk.json`, `cdk.json`, `serverless.yml`, `samconfig.toml`, `aws_*` resources in `*.tf`, `*.aws/` dir, `AWS_*` env vars in config | `aws` |
 
 Apply every matching infra stack — their rules don't conflict with the
 language stack's.
+
+### Frontend stacks (additive to node-ts; can also layer on any backend stack)
+
+| Evidence | Stack |
+|---|---|
+| `"react"` in `package.json` deps | `react` |
+| `"@angular/core"` in `package.json`, `angular.json` | `angular` |
+| `hx-get` / `hx-post` / `hx-target` attrs in templates; `htmx.org` in deps or a CDN `<script>` | `htmx-alpine` |
+| `x-data` / `x-show` / `x-on:` attrs; `alpinejs` in deps or CDN `<script>` | `htmx-alpine` |
+| `"reflex"` in `requirements.txt` / `pyproject.toml`, `rxconfig.py`, `import reflex as rx` | `reflex` |
+
+### ML / inference stacks (additive to python)
+
+| Evidence | Stack |
+|---|---|
+| `torch` or `pytorch-lightning` or `accelerate` in deps; `import torch` | `pytorch` |
+| `vllm` in deps; `vllm serve` in Dockerfiles / compose; `ollama/ollama` image; `OLLAMA_*` env vars; `ollama pull` in scripts | `vllm-ollama` |
 
 ## Framework detection (within a stack)
 
@@ -47,11 +64,37 @@ Grep the source files for import/config patterns:
 
 **Node**
 - `"next"` in package.json → `next`
-- `"react"` in package.json → `react`
+- `"react"` in package.json → `react` (also triggers `stacks/react`)
+- `"@angular/core"` in package.json → `angular` (also triggers `stacks/angular`)
 - `"@nestjs/core"` → `nestjs`
 - `"express"` → `express`
 
+**.NET**
+- `Microsoft.AspNetCore.*` in `*.csproj` → `aspnetcore`
+- `Microsoft.EntityFrameworkCore` → `efcore`
+- `*.Api.csproj` with `Program.cs` using `WebApplication.CreateBuilder` → `minimal-api`
+
 Frameworks drive which optional skills and MCPs get proposed in the interview.
+
+## Domain hub auto-loading
+
+Domain hubs (`core/skills/<hub>/SKILL.md`) are loaded on-demand via
+Claude's skill discovery, not pre-installed into every `.claude/`. The
+init skill copies **all** of `core/skills/` into `.claude/skills/`
+unconditionally; Claude's own skill mechanism decides which to activate
+based on the user's current task and the skill's `triggers:` list.
+
+However, init can **proactively suggest** hubs based on scan findings:
+
+| Signal | Proactively mention hub |
+|---|---|
+| `stacks/pytorch` or `stacks/vllm-ollama` matched; or `import vllm`, `OLLAMA_*`, `gguf`, `awq`, `gptq` in repo | `llm-serving` |
+| `stacks/kubernetes` matched; or Proxmox / Talos / k3s evidence; or homelab-ish topology (`helmfile.yaml`, `flux-system/`, `argocd/`) | `homelab-infra` |
+
+"Proactively mention" means print a one-line note in the init summary
+("Heads up: the `llm-serving` domain skill is available and will
+auto-activate for questions about model serving, quantization, VRAM
+sizing, etc."). Does not change what gets installed.
 
 ## External service detection
 

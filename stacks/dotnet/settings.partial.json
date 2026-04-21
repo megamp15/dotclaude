@@ -1,0 +1,37 @@
+{
+  "_comment": "source: stacks/dotnet — .NET SDK + EF Core tooling. NuGet restores allowed; global tool installs deliberately not auto-allowed.",
+  "permissions": {
+    "allow": [
+      "Bash(dotnet --version)",
+      "Bash(dotnet --info)",
+      "Bash(dotnet --list-sdks)",
+      "Bash(dotnet --list-runtimes)",
+      "Bash(dotnet new*)",
+      "Bash(dotnet restore*)",
+      "Bash(dotnet build*)",
+      "Bash(dotnet run*)",
+      "Bash(dotnet watch*)",
+      "Bash(dotnet test*)",
+      "Bash(dotnet publish*)",
+      "Bash(dotnet pack*)",
+      "Bash(dotnet format*)",
+      "Bash(dotnet clean*)",
+      "Bash(dotnet list*)",
+      "Bash(dotnet add*)",
+      "Bash(dotnet remove*)",
+      "Bash(dotnet sln *)",
+      "Bash(dotnet nuget list*)",
+      "Bash(dotnet nuget locals*)",
+      "Bash(dotnet ef migrations *)",
+      "Bash(dotnet ef database update*)",
+      "Bash(dotnet ef dbcontext *)",
+      "Bash(dotnet user-secrets *)",
+      "Bash(dotnet workload list)",
+      "Bash(dotnet workload search*)"
+    ],
+    "deny": [
+      "Bash(dotnet ef database drop*)",
+      "Bash(dotnet workload uninstall*)"
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "_comment": "source: stacks/vllm-ollama — run + inspect Ollama and vLLM processes. Destructive (delete model, kill process) deliberately not allowed by default.",
+  "permissions": {
+    "allow": [
+      "Bash(ollama list)",
+      "Bash(ollama show*)",
+      "Bash(ollama pull*)",
+      "Bash(ollama run*)",
+      "Bash(ollama ps)",
+      "Bash(ollama cp*)",
+      "Bash(ollama create*)",
+      "Bash(ollama push*)",
+      "Bash(ollama serve)",
+      "Bash(ollama --version)",
+      "Bash(vllm serve*)",
+      "Bash(vllm --version)",
+      "Bash(python -m vllm.entrypoints.openai.api_server*)",
+      "Bash(curl http://localhost:11434/api/tags)",
+      "Bash(curl http://localhost:8000/health)",
+      "Bash(curl http://localhost:8000/v1/models)",
+      "Bash(curl http://localhost:8000/metrics)"
+    ],
+    "deny": [
+      "Bash(ollama rm *)"
+    ]
+  }
+}

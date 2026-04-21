@@ -30,8 +30,13 @@ dotclaude/
 │   │                                    # error-handling, database, observability,
 │   │                                    # dependencies, documentation
 │   ├── skills/                          # pr-review, debug-fix, ship, tdd,
-│   │                                    # refactor, explain, test-writer, commit,`
+│   │                                    # refactor, explain, test-writer, commit,
 │   │                                    # security-audit, hotfix
+│   │                                    # + domain hubs (Jeffallan-style deep dives):
+│   │                                    #   llm-serving/  (model formats, serving
+│   │                                    #                 options, memory & batching)
+│   │                                    #   homelab-infra/ (Proxmox/Talos bring-up,
+│   │                                    #                  networking, storage & backup)
 │   ├── agents/                          # code-reviewer, security-reviewer,
 │   │                                    # performance-reviewer, doc-reviewer,
 │   │                                    # architect, code-searcher
@@ -66,12 +71,29 @@ dotclaude/
 │   │   ├── settings.partial.json
 │   │   ├── rules/                       # dockerfile-best-practices, compose-patterns
 │   │   └── skills/                      # container-debug
-│   └── terraform/                       # *.tf / .terraform.lock.hcl
-│       ├── CLAUDE.stack.md
-│       ├── settings.partial.json
-│       ├── rules/                       # state-safety
-│       ├── skills/                      # tf-plan-review
-│       └── hooks/                       # block-destroy-apply
+│   ├── terraform/                       # *.tf / .terraform.lock.hcl
+│   │   ├── CLAUDE.stack.md
+│   │   ├── settings.partial.json
+│   │   ├── rules/                       # state-safety
+│   │   ├── skills/                      # tf-plan-review
+│   │   └── hooks/                       # block-destroy-apply
+│   │
+│   │                                    # frontend stacks (additive to node-ts or backend)
+│   ├── react/                           # React 19+ — react-patterns
+│   ├── angular/                         # Angular 17+ — signals, OnPush, standalone
+│   ├── htmx-alpine/                     # server-rendered HTML + hypermedia patterns
+│   ├── reflex/                          # Python full-stack (rx.State patterns)
+│   │
+│   │                                    # infra / CI stacks
+│   ├── kubernetes/                      # manifest hygiene, probes, PDB, RBAC
+│   ├── aws/                             # IAM least-privilege, tagging, cost discipline
+│   ├── github-actions/                  # workflow security (pin SHAs, OIDC, permissions)
+│   │
+│   │                                    # ML / inference stacks
+│   ├── pytorch/                         # training loop, AMP, DDP/FSDP, checkpoints
+│   ├── vllm-ollama/                     # inference ops (ties to core skill llm-serving)
+│   │
+│   └── dotnet/                          # .NET 8+ / C# 12+ — nullable, records, async
 │
 └── skills/                              # the framework itself — one skill per workflow
     ├── dotclaude-init/                  # scan → interview → merge  (Claude Code target)
@@ -255,6 +277,21 @@ files. Useful for CI checks.
 2. Add detection rules to
    [`skills/dotclaude-init/references/scanning.md`](skills/dotclaude-init/references/scanning.md)
    so the init skill picks it up automatically.
+
+## Domain hubs
+
+Some topics cut across every stack and deserve Jeffallan-style
+deep-dive skills — a `SKILL.md` that orchestrates, plus `references/`
+siblings that go into depth. These live under `core/skills/` and
+activate on demand when the user asks a question in that domain.
+
+| Hub | What it covers | When it activates |
+|---|---|---|
+| [`llm-serving`](core/skills/llm-serving/SKILL.md) | Runtime choice (Ollama / vLLM / llama.cpp / TGI / SGLang), model formats (gguf / safetensors / AWQ / GPTQ / FP8), VRAM + KV-cache sizing, batching, multi-GPU | user asks about running LLMs locally, quantization, "why is it slow / OOM'ing", runtime comparisons |
+| [`homelab-infra`](core/skills/homelab-infra/SKILL.md) | Proxmox + Talos / k3s bring-up, LXC vs VM decisions, networking (VLANs, reverse proxy, MetalLB, Tailscale), storage (ZFS, NFS, Longhorn), the 3-2-1 backup rule | user plans a homelab, debugs a non-booting cluster, asks "where should this service live" |
+
+Domain hubs are bigger than tactical skills by design — one or two per
+session is the right pace to add more.
 
 ## Multi-agent portability
 

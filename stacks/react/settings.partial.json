@@ -1,0 +1,20 @@
+{
+  "_comment": "source: stacks/react — permissions for React tooling. Stacks on top of stacks/node-ts permissions; do not duplicate pnpm/npm/node entries here.",
+  "permissions": {
+    "allow": [
+      "Bash(pnpm dlx create-vite*)",
+      "Bash(pnpm dlx create-next-app*)",
+      "Bash(npx create-vite*)",
+      "Bash(npx create-next-app*)",
+      "Bash(pnpm run build)",
+      "Bash(pnpm run dev)",
+      "Bash(pnpm run start)",
+      "Bash(pnpm run lint)",
+      "Bash(pnpm run typecheck)",
+      "Bash(pnpm run test)",
+      "Bash(pnpm run test:ui)",
+      "Bash(pnpm run storybook)",
+      "Bash(pnpm run build-storybook)"
+    ]
+  }
+}

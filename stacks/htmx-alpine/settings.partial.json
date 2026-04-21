@@ -1,0 +1,6 @@
+{
+  "_comment": "source: stacks/htmx-alpine — no build tooling of its own; HTMX and Alpine.js are usually CDN-loaded or bundled by the backend. Permissions here are minimal; most work happens in the backend stack's tooling.",
+  "permissions": {
+    "allow": []
+  }
+}

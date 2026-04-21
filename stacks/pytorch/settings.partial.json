@@ -1,0 +1,23 @@
+{
+  "_comment": "source: stacks/pytorch — permissions for training/eval scripts + distributed launchers. Layers on top of stacks/python.",
+  "permissions": {
+    "allow": [
+      "Bash(python train.py*)",
+      "Bash(python eval.py*)",
+      "Bash(python scripts/*.py*)",
+      "Bash(python -m torch.distributed.run*)",
+      "Bash(torchrun *)",
+      "Bash(accelerate launch*)",
+      "Bash(accelerate config*)",
+      "Bash(accelerate test*)",
+      "Bash(deepspeed *)",
+      "Bash(nvidia-smi*)",
+      "Bash(nvcc --version)",
+      "Bash(python -c \"import torch; print(torch.__version__)\"*)",
+      "Bash(python -c \"import torch; print(torch.cuda.is_available())\"*)",
+      "Bash(tensorboard --logdir*)",
+      "Bash(wandb login*)",
+      "Bash(wandb sync*)"
+    ]
+  }
+}
