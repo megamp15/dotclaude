@@ -228,19 +228,44 @@ syncs.
 
 ## Install
 
-One-time, per machine:
+One-time, per machine.
+
+**Linux / macOS:**
 
 ```bash
 git clone https://github.com/<you>/dotclaude ~/code/dotclaude
 export DOTCLAUDE_HOME=~/code/dotclaude          # add to your shell init
 
-# expose dotclaude skills to every project at the user scope
+# Expose each framework skill at the top level of ~/.claude/skills/.
+# Claude Code discovers skills at ONE level deep — nesting under a
+# single `dotclaude/` subdir hides them. Symlink each skill directly.
 mkdir -p ~/.claude/skills
-ln -s ~/code/dotclaude/skills ~/.claude/skills/dotclaude
+for skill in "$DOTCLAUDE_HOME"/skills/*/; do
+  name=$(basename "$skill")
+  ln -sfn "$skill" "$HOME/.claude/skills/$name"
+done
 ```
 
-After this, the `dotclaude-init` skill is visible from any Claude Code
-session on the machine.
+**Windows (PowerShell):**
+
+```powershell
+git clone https://github.com/<you>/dotclaude "$env:USERPROFILE\code\dotclaude"
+setx DOTCLAUDE_HOME "$env:USERPROFILE\code\dotclaude"
+$env:DOTCLAUDE_HOME = "$env:USERPROFILE\code\dotclaude"
+
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude\skills" | Out-Null
+Get-ChildItem -Path "$env:DOTCLAUDE_HOME\skills" -Directory | ForEach-Object {
+    $link = Join-Path "$env:USERPROFILE\.claude\skills" $_.Name
+    if (Test-Path $link) { Remove-Item $link -Force -Recurse }
+    New-Item -ItemType Junction -Path $link -Target $_.FullName | Out-Null
+}
+```
+
+After this, the framework skills (`dotclaude-init`, `dotclaude-sync`,
+`dotclaude-init-cursor`, `dotclaude-init-copilot`,
+`dotclaude-init-opencode`, `dotclaude-init-agents-md`) are visible
+from any Claude Code session on the machine. **Restart any running
+Claude Code session** — skills are discovered at session start.
 
 ## Usage
 
