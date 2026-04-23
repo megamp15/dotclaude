@@ -139,35 +139,56 @@ dotclaude/
 │   │
 │   └── dotnet/                          # .NET 8+ / C# 12+ — nullable, records, async
 │
-└── skills/                              # the framework itself — one skill per workflow
-    ├── dotclaude-init/                  # scan → interview → merge  (Claude Code target)
-    │   ├── SKILL.md
-    │   └── references/
-    │       ├── scanning.md
-    │       ├── interview.md
-    │       └── merge.md
-    ├── dotclaude-sync/                  # refresh upstream content, preserve project-owned
-    │   ├── SKILL.md
-    │   └── references/
-    │       ├── classification.md
-    │       ├── update-rules.md
-    │       └── drift-handling.md
-    │
-    │                                    # per-agent renderers — same sources, different targets
-    ├── dotclaude-init-cursor/           # → .cursor/rules/*.mdc + .cursor/mcp.json + AGENTS.md
-    │   ├── SKILL.md
-    │   └── references/
-    │       ├── mdc-format.md
-    │       └── translation.md
-    ├── dotclaude-init-copilot/          # → .github/copilot-instructions.md + .github/instructions/
-    │   ├── SKILL.md
-    │   └── references/translation.md
-    ├── dotclaude-init-opencode/         # → opencode.jsonc + .opencode/agents|command|instructions/
-    │   ├── SKILL.md
-    │   └── references/translation.md
-    └── dotclaude-init-agents-md/        # → AGENTS.md only (universal fallback)
-        └── SKILL.md
+├── skills/                              # the framework itself — one skill per workflow
+│   ├── dotclaude-init/                  # scan → interview → merge  (Claude Code target)
+│   │   ├── SKILL.md
+│   │   └── references/
+│   │       ├── scanning.md
+│   │       ├── interview.md
+│   │       └── merge.md
+│   ├── dotclaude-sync/                  # refresh upstream content, preserve project-owned
+│   │   ├── SKILL.md
+│   │   └── references/
+│   │       ├── classification.md
+│   │       ├── update-rules.md
+│   │       └── drift-handling.md
+│   │
+│   │                                    # per-agent renderers — same sources, different targets
+│   ├── dotclaude-init-cursor/           # → .cursor/rules/*.mdc + .cursor/mcp.json + AGENTS.md
+│   │   ├── SKILL.md
+│   │   └── references/
+│   │       ├── mdc-format.md
+│   │       └── translation.md
+│   ├── dotclaude-init-copilot/          # → .github/copilot-instructions.md + .github/instructions/
+│   │   ├── SKILL.md
+│   │   └── references/translation.md
+│   ├── dotclaude-init-opencode/         # → opencode.jsonc + .opencode/agents|command|instructions/
+│   │   ├── SKILL.md
+│   │   └── references/translation.md
+│   └── dotclaude-init-agents-md/        # → AGENTS.md only (universal fallback)
+│       └── SKILL.md
+│
+└── commands/                            # Claude Code slash-command wrappers over the six
+                                         # framework skills. Deterministic /-menu invocation
+                                         # alongside natural-language activation via skills.
+                                         # Installed into ~/.claude/commands/.
+    ├── dotclaude-init.md
+    ├── dotclaude-sync.md
+    ├── dotclaude-init-cursor.md
+    ├── dotclaude-init-copilot.md
+    ├── dotclaude-init-opencode.md
+    └── dotclaude-init-agents-md.md
 ```
+
+**Commands vs skills, by design.** The six framework entry points
+above are the *only* things that exist as both a skill and a slash
+command. Commands exist because framework init/sync is a
+user-initiated, named operation where deterministic triggering and
+menu discoverability matter. The 40+ `core/` and `stack/` skills
+(e.g. `debug-fix`, `pr-review`, `postgres-pro`, `rag-architect`) are
+skill-only by design — they're meant to auto-activate based on the
+user's described intent, which is a feature that wrapping in commands
+would break.
 
 Stacks are **layered**, not exclusive. A Python API that runs in Docker
 under Kubernetes infra managed by Terraform in a GitHub Actions pipeline
@@ -239,10 +260,14 @@ export DOTCLAUDE_HOME=~/code/dotclaude          # add to your shell init
 # Expose each framework skill at the top level of ~/.claude/skills/.
 # Claude Code discovers skills at ONE level deep — nesting under a
 # single `dotclaude/` subdir hides them. Symlink each skill directly.
-mkdir -p ~/.claude/skills
+mkdir -p ~/.claude/skills ~/.claude/commands
 for skill in "$DOTCLAUDE_HOME"/skills/*/; do
-  name=$(basename "$skill")
-  ln -sfn "$skill" "$HOME/.claude/skills/$name"
+  ln -sfn "$skill" "$HOME/.claude/skills/$(basename "$skill")"
+done
+
+# Expose framework slash commands (/dotclaude-init, /dotclaude-sync, etc.).
+for cmd in "$DOTCLAUDE_HOME"/commands/*.md; do
+  ln -sfn "$cmd" "$HOME/.claude/commands/$(basename "$cmd")"
 done
 ```
 
@@ -253,19 +278,38 @@ git clone https://github.com/<you>/dotclaude "$env:USERPROFILE\code\dotclaude"
 setx DOTCLAUDE_HOME "$env:USERPROFILE\code\dotclaude"
 $env:DOTCLAUDE_HOME = "$env:USERPROFILE\code\dotclaude"
 
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude\skills" | Out-Null
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude\skills"   | Out-Null
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude\commands" | Out-Null
+
 Get-ChildItem -Path "$env:DOTCLAUDE_HOME\skills" -Directory | ForEach-Object {
     $link = Join-Path "$env:USERPROFILE\.claude\skills" $_.Name
     if (Test-Path $link) { Remove-Item $link -Force -Recurse }
     New-Item -ItemType Junction -Path $link -Target $_.FullName | Out-Null
 }
+
+# Commands are individual files — use hardlinks (no admin required on NTFS).
+# Hardlinks reflect in-place edits immediately. If `git pull` ever replaces
+# a source command file (rare; creates a new inode), just re-run this step.
+Get-ChildItem -Path "$env:DOTCLAUDE_HOME\commands" -Filter *.md | ForEach-Object {
+    $link = Join-Path "$env:USERPROFILE\.claude\commands" $_.Name
+    if (Test-Path $link) { Remove-Item $link -Force }
+    cmd /c mklink /H "`"$link`"" "`"$($_.FullName)`"" | Out-Null
+}
 ```
 
-After this, the framework skills (`dotclaude-init`, `dotclaude-sync`,
-`dotclaude-init-cursor`, `dotclaude-init-copilot`,
-`dotclaude-init-opencode`, `dotclaude-init-agents-md`) are visible
-from any Claude Code session on the machine. **Restart any running
-Claude Code session** — skills are discovered at session start.
+After this, the framework surfaces in two ways from any Claude Code
+session on the machine:
+
+- **Skills** (auto-activate on natural language) — `dotclaude-init`,
+  `dotclaude-sync`, `dotclaude-init-cursor`, `dotclaude-init-copilot`,
+  `dotclaude-init-opencode`, `dotclaude-init-agents-md`.
+- **Slash commands** (deterministic, show in `/` menu) — same six
+  names: `/dotclaude-init`, `/dotclaude-sync`,
+  `/dotclaude-init-cursor`, `/dotclaude-init-copilot`,
+  `/dotclaude-init-opencode`, `/dotclaude-init-agents-md`.
+
+**Restart any running Claude Code session** — both skills and
+commands are discovered at session start.
 
 ## Usage
 
