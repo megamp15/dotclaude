@@ -43,6 +43,8 @@ core/mcp/
 | `github` | `GITHUB_PERSONAL_ACCESS_TOKEN` env var | Interview confirms project is on GitHub |
 | `context7` | Optional `CONTEXT7_API_KEY` for higher rate limits | Interview confirms project uses a framework likely to need current library docs (Next, Prisma, Django, etc.) or user explicitly opts in |
 | `chrome-devtools` | none | Interview confirms frontend/web-app work is the current focus. Heavy context footprint (~17k tokens); opt-in only when needed |
+| `brain-mcp` | none | User wants cross-agent persistent memory (Claude Code ↔ Cursor ↔ Codex ↔ ...). **Recommended install path is GLOBAL via `pipx install brain-mcp && brain-mcp setup`** — auto-configures every agent on the machine. Use the project-scoped `.mcp.json` entry only when you want a brain isolated to one repo |
+| `graphify` | none | User wants a queryable knowledge graph of the repo (code + docs + papers + diagrams). Primary install is the CLI + skill manifest that ships with `pip install graphifyy`; the project-scoped `.mcp.json` entry is for protocol-level integration via `graphify serve` |
 
 ## Usage skills
 

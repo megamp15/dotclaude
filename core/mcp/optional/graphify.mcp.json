@@ -1,0 +1,9 @@
+{
+  "_comment": "source: core/mcp/optional — Graphify. Multi-modal knowledge graph for codebases. Tree-sitter (19 langs) + LLM semantic extraction + Leiden clustering. Local-first, MIT, no vector DB. Primary install path is the CLI + skill manifest that ships with the package (`pip install graphifyy && graphify install`); this MCP entry is for projects that prefer protocol-level integration via `graphify serve`.",
+  "mcpServers": {
+    "graphify": {
+      "command": "graphify",
+      "args": ["serve"]
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "_comment": "source: core/mcp/optional — brain-mcp. Cross-agent persistent memory: indexes Claude Code, Claude Desktop, Cursor, Windsurf, Gemini CLI conversations into a local LanceDB and exposes 25 retrieval/synthesis tools. 100% local, MIT, no cloud. Recommended install path is GLOBAL via `brain-mcp setup` — it auto-configures every agent on your machine. Use this project-scoped entry only when you want a brain isolated to one repo (rare).",
+  "mcpServers": {
+    "brain": {
+      "command": "brain-mcp",
+      "args": ["serve"]
+    }
+  }
+}

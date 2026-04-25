@@ -60,6 +60,9 @@ dotclaude/
 │   │                                    #   AI/ML: rag-architect, ml-pipeline,
 │   │                                    #          fine-tuning-expert, prompt-engineer
 │   │                                    #   realtime: websocket-engineer
+│   │                                    # + project-conductor (lifecycle-aware orchestrator:
+│   │                                    #   detects phase, routes to driver skill,
+│   │                                    #   maintains agent-agnostic .claude/project-state.md)
 │   ├── conventions/                     # cross-cutting conventions (non-rule docs):
 │   │                                    #   ported-skills.md (provenance for skills
 │   │                                    #                     adapted from external sources)
@@ -73,7 +76,9 @@ dotclaude/
 │   ├── templates/                       # CLAUDE.local.md, settings.local.json  (one-shot copy)
 │   └── mcp/                             # filesystem, fetch, git, memory,
 │       ├── mcp.partial.json             # sequential-thinking, time  (always-on)
-│       ├── optional/                    # github, context7, chrome-devtools (opt-in)
+│       ├── optional/                    # github, context7, chrome-devtools,
+│       │                                # brain-mcp (cross-agent memory, MIT, local),
+│       │                                # graphify (multi-modal code graph, MIT, local) (opt-in)
 │       └── skills/                      # usage skill per MCP server
 │
 ├── stacks/                              # layered — language + infra, pick all that apply
@@ -521,6 +526,30 @@ upstream and decide whether to re-port. `dotclaude-sync` only pulls from
 manually (or, in the future, by a dedicated `dotclaude-upstream-check`
 skill).
 
+## Cross-agent continuity (memory + graph + conductor)
+
+Three independently useful pieces that compose into one outcome: **0
+context loss when you move between agents, and lifecycle-aware behavior
+across a project's life.**
+
+| Concern | Tool | Where it lives | Fits where |
+|---|---|---|---|
+| Conversation history across every AI tool you use (Claude Code, Cursor, Codex, Windsurf, Gemini CLI) | [`brain-mcp`](https://github.com/mordechaipotash/brain-mcp) (MIT, local) | `core/mcp/optional/brain-mcp.mcp.json` + `core/mcp/skills/brain-mcp/SKILL.md` | Wired globally with `brain-mcp setup`; project-scoped only when you want a brain isolated to one repo |
+| Structural map of the codebase — code, docs, papers, diagrams as one queryable knowledge graph | [`graphify`](https://github.com/safishamsi/graphify) (MIT, local-first) | `core/mcp/optional/graphify.mcp.json` + `core/mcp/skills/graphify/SKILL.md` | Per-project. Run `graphify ./` once; query via slash commands or `graphify serve` |
+| Phase detection (greenfield / building / established / maintenance / migration), routing to the right driver skill, and a portable `.claude/project-state.md` | `project-conductor` | `core/skills/project-conductor/` | Run on every cold start; updated at the end of substantive sessions |
+
+**The composition:**
+
+- `brain-mcp` keeps the **conversational** context (what was said, decided, doubted).
+- `graphify` keeps the **structural** context (what calls what, what's load-bearing, what's surprising).
+- `project-conductor` keeps the **intent** context (what phase, what's next, what not to lose) and orchestrates handoff via a single file (`.claude/project-state.md`) that any agent on any platform can read.
+
+When you switch from Claude Code to Cursor (or vice versa), the new agent
+runs `project-conductor`, which reads `.claude/project-state.md`, queries
+brain-mcp for recent context, and reads `graphify-out/GRAPH_REPORT.md` if
+present — and emits a six-line re-entry brief in seconds. None of the
+three components depend on the others; install only what you need.
+
 ## References & inspiration
 
 Ideas borrowed (not depended on) from:
@@ -530,3 +559,12 @@ Ideas borrowed (not depended on) from:
 - [Jeffallan/claude-skills](https://github.com/Jeffallan/claude-skills) —
   skill-as-folder pattern, `triggers:` frontmatter, domain-hub skills,
   and the adapted skills listed above.
+- [mordechaipotash/brain-mcp](https://github.com/mordechaipotash/brain-mcp) —
+  cross-agent persistent memory (MIT, local). Wired as an opt-in MCP with
+  a usage skill in `core/mcp/skills/brain-mcp/`.
+- [safishamsi/graphify](https://github.com/safishamsi/graphify) —
+  multi-modal knowledge-graph builder (MIT, local-first). Wired as an
+  opt-in MCP with a usage skill in `core/mcp/skills/graphify/`.
+- The Strangler Fig / Branch by Abstraction / Parallel Change patterns
+  (Fowler, Hammant) — used throughout `legacy-modernizer` and the
+  `migration` phase routing in `project-conductor`.
