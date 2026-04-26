@@ -40,7 +40,7 @@ my-project/
     │   ├── tdd.md
     │   ├── refactor.md
     │   ├── commit.md
-    │   ├── security-audit.md
+    │   ├── security.md
     │   └── hotfix.md
     └── instructions/                    # extra rule files referenced from opencode.jsonc
         ├── code-quality.md

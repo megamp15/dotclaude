@@ -115,7 +115,7 @@ parallel subagent work **before** the interview:
 ```
 Before interview, launch in parallel:
 - architecture-designer: assess system impact
-- security-reviewer / audit: identify auth and data concerns
+- security (audit mode): identify auth and data concerns
 - explore agent: search the codebase for similar patterns
 
 Collect findings → use them to sharpen interview questions

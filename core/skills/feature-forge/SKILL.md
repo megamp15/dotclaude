@@ -39,8 +39,8 @@ decisions, not exploration:
 - Scan the repo for related existing patterns (auth, validation, similar
   features).
 - Note the stacks in use (from `AGENTS.md` / `CLAUDE.md`).
-- If high-stakes: delegate to `architecture-designer` or `security-audit`
-  for a pre-read.
+- If high-stakes: delegate to `architecture-designer` or `security`
+  (audit mode) for a pre-read.
 
 ### 2. Interview (PM hat → Dev hat → Validation)
 

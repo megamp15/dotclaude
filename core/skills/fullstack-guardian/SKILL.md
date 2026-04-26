@@ -7,7 +7,7 @@ ported-from: https://github.com/Jeffallan/claude-skills/tree/main/skills/fullsta
 ported-at: 2026-04-17
 ported-sha: main
 adapted: true
-note: Intentionally thin. Stack-specific patterns live in stacks/<stack>/. Deep security review lives in security-audit.
+note: Intentionally thin. Stack-specific patterns live in stacks/<stack>/. Deep security review lives in security (audit mode).
 ---
 
 # fullstack-guardian (thin)
@@ -22,7 +22,7 @@ merge". Every change is viewed through three lenses:
    response shape.
 
 You do **not** do deep architectural design (that's `architecture-designer`)
-or full security audits (that's `security-audit`). You ship a reviewable
+or full security audits (that's `security (audit mode)`). You ship a reviewable
 feature with security done correctly end-to-end.
 
 ## When this skill is the right tool
@@ -37,7 +37,7 @@ feature with security done correctly end-to-end.
 - Pure frontend change → stack skill (e.g. `stacks/react/`).
 - Unknown scope → run `feature-forge` first.
 - Significant architecture decisions → `architecture-designer`.
-- Full security posture review → `security-audit`.
+- Full security posture review → `security (audit mode)`.
 
 ## Core workflow
 
@@ -174,5 +174,5 @@ export async function fetchProfile(userId: number): Promise<Profile> {
 | Understand existing behavior | `spec-miner` |
 | Ship the change | `ship` |
 | Review the change | `pr-review` |
-| Deep security posture review | `security-audit` |
+| Deep security posture review | `security (audit mode)` |
 | Stack-specific patterns | `stacks/<stack>/` |

@@ -31,7 +31,7 @@ dotclaude/
 │   │                                    # dependencies, documentation
 │   ├── skills/                          # pr-review, debug-fix, ship, tdd,
 │   │                                    # refactor, explain, test-writer, commit,
-│   │                                    # security-audit, hotfix
+│   │                                    # security (3 modes: guard/review/audit), hotfix
 │   │                                    # + architecture / design skills:
 │   │                                    #   architecture-designer, cloud-architect,
 │   │                                    #   microservices-architect,
@@ -55,8 +55,8 @@ dotclaude/
 │   │                                    #        chaos-engineer, debugging-wizard,
 │   │                                    #        legacy-modernizer
 │   │                                    #   testing: test-master, playwright-expert
-│   │                                    #   security: secure-code-guardian,
-│   │                                    #             security-reviewer (skill form)
+│   │                                    #   security: security (unified skill,
+│   │                                    #             modes: guard / review / audit)
 │   │                                    #   AI/ML: rag-architect, ml-pipeline,
 │   │                                    #          fine-tuning-expert, prompt-engineer
 │   │                                    #   realtime: websocket-engineer
@@ -521,8 +521,7 @@ how sync treats them.
 | `core/skills/` | `monitoring-expert` | `monitoring-expert` |
 | `core/skills/` | `test-master` | `test-master` |
 | `core/skills/` | `playwright-expert` | `playwright-expert` |
-| `core/skills/` | `secure-code-guardian` | `secure-code-guardian` |
-| `core/skills/` | `security-reviewer` (skill form) | `security-reviewer` |
+| `core/skills/` | `security` (unified: guard / review / audit modes) | `secure-code-guardian` + `security-reviewer` |
 | `core/skills/` | `rag-architect` | `rag-architect` |
 | `core/skills/` | `ml-pipeline` | `ml-pipeline` |
 | `core/skills/` | `fine-tuning-expert` | `fine-tuning-expert` |
