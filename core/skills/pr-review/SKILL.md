@@ -27,6 +27,31 @@ in parallel and synthesizes their findings into one ranked report.
 Use the cheapest source available: `git diff --cached`, `gh pr diff`, or
 `git diff main...HEAD`. Capture both the diff and the files touched.
 
+### 1a. (When wired) Get blast radius from code-review-graph
+
+If the project has `code-review-graph` wired (check the conductor brief
+for `[code-review-graph wired]` or look for `.code-review-graph/` in the
+repo root), call its review-time tools **before** routing to the
+specialist agents:
+
+1. `get_minimal_context_tool` — ~100-token framing of what changed.
+2. `detect_changes_tool` — risk-scored impact analysis on the diff.
+3. `get_impact_radius_tool` — full blast radius (callers, dependents, tests).
+4. `get_affected_flows_tool` — which execution flows the change touches.
+5. `get_knowledge_gaps_tool` (only if the impact radius includes hot
+   paths) — flag untested hotspots inside the radius.
+
+Or invoke the bundled MCP prompt `review_changes` / `pre_merge_check`
+directly, which composes these for you.
+
+Pass the resulting blast radius and risk score into the agent fan-out
+in step 3 — it tells each specialist what's *actually* in scope, not
+just what the diff line-count suggests. Touching one file but having a
+47-caller blast radius means the change is much bigger than it looks.
+
+If CRG is not wired, skip this step silently and proceed to step 2.
+Do not pretend to have called CRG when you didn't.
+
 ### 2. Classify the change
 
 Route to agents based on what the diff touches:

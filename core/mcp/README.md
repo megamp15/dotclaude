@@ -45,6 +45,7 @@ core/mcp/
 | `chrome-devtools` | none | Interview confirms frontend/web-app work is the current focus. Heavy context footprint (~17k tokens); opt-in only when needed |
 | `brain-mcp` | none | User wants cross-agent persistent memory (Claude Code ↔ Cursor ↔ Codex ↔ ...). **Recommended install path is GLOBAL via `pipx install brain-mcp && brain-mcp setup`** — auto-configures every agent on the machine. Use the project-scoped `.mcp.json` entry only when you want a brain isolated to one repo |
 | `graphify` | none | User wants a queryable knowledge graph of the repo (code + docs + papers + diagrams). Primary install is the CLI + skill manifest that ships with `pip install graphifyy`; the project-scoped `.mcp.json` entry is for protocol-level integration via `graphify serve` |
+| `code-review-graph` | none | User wants an **incrementally-updated** code graph tuned for review and daily coding (blast-radius analysis, <2s auto-update on save/commit, 28 MCP tools, multi-repo daemon). Recommended install path is GLOBAL via `pip install code-review-graph && code-review-graph install` — auto-configures 11 supported agents. Use the project-scoped `.mcp.json` entry only to scope to one repo or to filter tools. Pairs with `graphify`: graphify for *exploration* (multi-modal), CRG for *review* (incremental, blast-radius) |
 
 ## Usage skills
 

@@ -1,0 +1,9 @@
+{
+  "_comment": "source: core/mcp/optional — code-review-graph (CRG). Local knowledge graph tuned for code review and daily coding tasks. Tree-sitter (23 languages + Jupyter) + SQLite + incremental updates (<2s on save/commit) + first-class blast-radius analysis. Pairs with graphify: graphify is for *exploration* (multi-modal, semantic), CRG is for *review* (incremental, blast-radius, PR-tuned). Recommended install path is global via `pip install code-review-graph && code-review-graph install` — it auto-configures 11 supported agents (Codex, Claude Code, Cursor, Windsurf, Zed, Continue, OpenCode, Antigravity, Qwen, Qoder, Kiro). Use this MCP entry only when you want CRG isolated to one repo or want to filter the 28 tools. MIT, local-first.",
+  "mcpServers": {
+    "code-review-graph": {
+      "command": "code-review-graph",
+      "args": ["serve"]
+    }
+  }
+}

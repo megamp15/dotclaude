@@ -45,6 +45,18 @@ session left off — even if that session was on a different agent
    Skim this before any non-trivial structural change. If it's stale
    (>14 days) or absent and the change is large, run `graphify ./` first.
 
+5. **`code-review-graph`** (if wired — check `.code-review-graph/` in
+   repo root or the conductor brief) — incremental review-time graph,
+   auto-updated on every save and commit. Use **before** any PR review
+   or change-impact question:
+   - `get_minimal_context_tool` (~100 tokens, call first)
+   - `detect_changes_tool` (risk-scored diff analysis)
+   - `get_impact_radius_tool` (blast radius of named files / functions)
+
+   Same graceful-degradation rule: if not wired, skip silently. CRG
+   complements graphify (graphify = exploration, CRG = review); both
+   can coexist with no conflict.
+
 **The session-end discipline.** When meaningful work happens:
 
 - A decision made, feature shipped, refactor landed, or new question
@@ -59,8 +71,9 @@ The next agent on any platform reads both files. Schemas live in
 
 **Don't conflate the artifacts.** project-state.md holds *current
 intent*. learnings.md holds *accumulated discovery*. brain-mcp holds
-*full conversation history*. graphify holds *structure*. Four
-artifacts, four concerns, one re-entry brief.
+*full conversation history*. graphify holds *structural exploration*.
+code-review-graph holds *change-shaped structure*. Five artifacts,
+five concerns, one re-entry brief.
 
 ## Working principles
 

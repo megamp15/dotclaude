@@ -20,8 +20,8 @@ Batch as multi-select with a short note on credentials for each.
 
 ### Continuity layer (special handling)
 
-Two MCPs are part of the dotclaude **continuity layer** and get
-default-ON treatment, not default-OFF like the others. Both also get a
+Three MCPs are part of the dotclaude **continuity layer** and get
+default-ON treatment, not default-OFF like the others. All three get a
 **three-way question** — wire only, wire and install now, or skip —
 rather than the usual yes/no, because installing them is a one-time
 machine-wide step the user may want init to handle while they're
@@ -80,6 +80,43 @@ already paying attention.
 
   For **trivial** repos (<30 files, no framework), default to
   "skip both" but still offer the question — leave the option visible.
+
+- **`code-review-graph`** — incremental review-time code graph. Pairs
+  with graphify (graphify = exploration, CRG = review). Same three-way
+  pattern, gated on **active** development:
+
+  **If `continuity.crg_installed` is true:**
+
+  > "Wire code-review-graph for blast-radius analysis on PRs and edits?
+  > (Default: yes for active non-trivial repos.)"
+  >
+  > Options: `[ ] yes (default for >30 files / commits in last 30d)` · `[ ] no, skip`
+
+  **If `continuity.crg_installed` is false AND repo is non-trivial AND active:**
+
+  > "Wire code-review-graph for blast-radius analysis on PRs and edits?
+  > (Default: wire-only. Free, MIT, local-first, SQLite. Tree-sitter
+  > graph that auto-updates in <2s on every save/commit. 28 MCP tools
+  > including `detect_changes_tool` and `get_impact_radius_tool`. Best
+  > for daily review loops; greenfield doesn't need it yet. Not
+  > installed yet — I can run
+  > `pip install code-review-graph && code-review-graph install` for
+  > you now.)"
+  >
+  > Options:
+  > - `[x] wire only — install code-review-graph myself later (default)`
+  > - `[ ] wire AND install now — run pip install + code-review-graph install with my confirmation`
+  > - `[ ] skip both wiring and install`
+
+  For **greenfield** repos (≤3 commits) or trivial repos (<30 files),
+  default to "skip both" — there's nothing meaningful to review yet.
+  CRG can be wired later by re-running init once the repo is active.
+
+  **CRG vs graphify in the same project.** Both can coexist with no
+  conflict. The skills explicitly route different question shapes to
+  the right tool. If the user really wants only one, prefer:
+  - **graphify** for "I'm onboarding / exploring an unfamiliar repo" first.
+  - **CRG** for "I'm actively shipping changes on a known repo" first.
 
 **Confirmation discipline if "wire AND install now" is chosen:**
 init does NOT run the install commands silently. Even after the user

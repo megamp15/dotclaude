@@ -85,7 +85,9 @@ dotclaude/
 │       ├── mcp.partial.json             # sequential-thinking, time  (always-on)
 │       ├── optional/                    # github, context7, chrome-devtools,
 │       │                                # brain-mcp (cross-agent memory, MIT, local),
-│       │                                # graphify (multi-modal code graph, MIT, local) (opt-in)
+│       │                                # graphify (multi-modal code graph, MIT, local),
+│       │                                # code-review-graph (incremental review graph,
+│       │                                #   28 MCP tools, blast-radius, MIT) (opt-in)
 │       └── skills/                      # usage skill per MCP server
 │
 ├── stacks/                              # layered — language + infra, pick all that apply
@@ -550,20 +552,29 @@ every cold start begins with a re-entry brief, automatically.
 | **`project-conductor` skill** | `core/skills/project-conductor/` | Drives when the user explicitly asks "where are we", when phase ambiguity needs a real conversation, and when state needs updating at the end of substantive work. |
 | **`learnings-log` skill** + **`/dotclaude-learn`** command | `core/skills/learnings-log/`, `commands/dotclaude-learn.md` | Append-only project memory at `.claude/learnings.md`. Captures gotchas, hidden couplings, "looks wrong but is intentional" notes. Zero-dep — works without any MCP installed. The Ralph-style baseline that carries cross-session memory when brain-mcp isn't wired. |
 | **brain-mcp** (default ON in init, opt-in install) | `core/mcp/optional/brain-mcp.mcp.json` + `core/mcp/skills/brain-mcp/SKILL.md` | Cross-agent persistent memory ([brain-mcp](https://github.com/mordechaipotash/brain-mcp), MIT, 100% local). 25 MCP tools. Recommended global install: `pipx install brain-mcp && brain-mcp setup`. |
-| **graphify** (default ON for non-trivial repos, opt-in install) | `core/mcp/optional/graphify.mcp.json` + `core/mcp/skills/graphify/SKILL.md` | Multi-modal codebase knowledge graph ([graphify](https://github.com/safishamsi/graphify), MIT, local-first). Tree-sitter + Leiden clustering. Install: `pip install graphifyy && graphify install`. |
+| **graphify** (default ON for non-trivial repos, opt-in install) | `core/mcp/optional/graphify.mcp.json` + `core/mcp/skills/graphify/SKILL.md` | Multi-modal codebase knowledge graph ([graphify](https://github.com/safishamsi/graphify), MIT, local-first). Tree-sitter + Leiden clustering. Best for **exploration** ("what is this codebase?"). Install: `pip install graphifyy && graphify install`. |
+| **code-review-graph (CRG)** (default ON for active non-trivial repos, opt-in install) | `core/mcp/optional/code-review-graph.mcp.json` + `core/mcp/skills/code-review-graph/SKILL.md` | Incremental review-time code graph ([code-review-graph](https://github.com/tirth8205/code-review-graph), MIT, local, SQLite). Tree-sitter (23 langs + Jupyter) + auto-update hook (<2s on save/commit) + first-class blast-radius. 28 MCP tools, 5 workflow prompts. Best for **review** ("what does this change break?"). Install: `pip install code-review-graph && code-review-graph install` (auto-configures 11 supported agents). |
 
 ### The composition
 
-Four artifacts, four concerns, one re-entry brief:
+Five artifacts, five concerns, one re-entry brief:
 
 - `.claude/project-state.md` keeps the **current intent** (what phase, what's next, what not to lose) — agent-agnostic Markdown, snapshot, lives in git.
 - `.claude/learnings.md` keeps the **accumulated discovery** (gotchas, dead ends, hidden couplings) — append-only, zero-dep, the Ralph-style baseline.
 - `brain-mcp` keeps the **full conversational** context (everything said, decided, doubted across every AI tool) — semantic search, optional install.
-- `graphify` keeps the **structural** context (what calls what, what's load-bearing, what's surprising) — Tree-sitter graph, optional install.
+- `graphify` keeps the **structural exploration** context (multi-modal: code + docs + papers + diagrams; "what is this codebase?") — Tree-sitter graph + Leiden clustering, optional install.
+- `code-review-graph` keeps the **change-shaped structural** context (incremental, auto-updated <2s on save/commit; "what does this change break?") — Tree-sitter graph + SQLite + 28 MCP tools, optional install.
 
-The two file-based artifacts work with zero installs. The two MCPs add
-semantic search and structural depth on top. Graceful degradation in
-both directions.
+The two file-based artifacts work with zero installs. The three MCPs
+add semantic search, exploration depth, and review-time blast-radius
+on top. Graceful degradation throughout — each layer skips silently
+when the underlying tool isn't installed.
+
+**graphify vs code-review-graph** — both are graphs, but they answer
+different questions: graphify is your map for *exploring* a codebase
+(multi-modal, semantic, surprises), CRG is your map for *reviewing
+changes* (incremental, blast-radius, risk-scored). Wire both; the
+skills route different question shapes to the right one.
 
 ### The cold-start loop
 
@@ -584,16 +595,24 @@ brain-mcp setup
 # graphify — per-project graph builder + slash commands
 pip install graphifyy
 graphify install
+
+# code-review-graph — per-project incremental review graph;
+# auto-detects and configures 11 supported agents (Claude Code,
+# Codex, Cursor, Windsurf, Zed, Continue, OpenCode, Antigravity,
+# Qwen, Qoder, Kiro)
+pip install code-review-graph
+code-review-graph install
 ```
 
-Both gracefully degrade — if either isn't installed, the conductor brief
-says so and the agent skips the corresponding step. No errors, no nags.
+All three gracefully degrade — if any isn't installed, the conductor
+brief says so and the agent skips the corresponding step. No errors,
+no nags.
 
 ### Per-project setup
 
 `dotclaude-init` handles this automatically:
 
-- Wires brain-mcp (default ON) and graphify (default ON for non-trivial repos) into `.mcp.json`. Each gets a three-way choice: wire only, wire AND install now (with per-tool confirmation), or skip.
+- Wires brain-mcp (default ON), graphify (default ON for non-trivial repos), and code-review-graph (default ON for non-trivial *active* repos — skipped for greenfield) into `.mcp.json`. Each gets a three-way choice: wire only, wire AND install now (with per-tool confirmation), or skip.
 - Copies `conductor-brief.sh` into `.claude/hooks/` and registers it in `.claude/settings.json`.
 - Seeds `.claude/project-state.md` with the detected phase if the file doesn't already exist.
 - Seeds `.claude/learnings.md` with a minimal header + one example entry if the file doesn't already exist (zero-dep cross-session memory baseline).
@@ -614,6 +633,10 @@ Ideas borrowed (not depended on) from:
 - [safishamsi/graphify](https://github.com/safishamsi/graphify) —
   multi-modal knowledge-graph builder (MIT, local-first). Wired as an
   opt-in MCP with a usage skill in `core/mcp/skills/graphify/`.
+- [tirth8205/code-review-graph](https://github.com/tirth8205/code-review-graph) —
+  incremental review-time code graph (MIT, local, SQLite). Wired as an
+  opt-in MCP with a usage skill in `core/mcp/skills/code-review-graph/`.
+  Pairs with graphify: graphify for exploration, CRG for review.
 - The Strangler Fig / Branch by Abstraction / Parallel Change patterns
   (Fowler, Hammant) — used throughout `legacy-modernizer` and the
   `migration` phase routing in `project-conductor`.

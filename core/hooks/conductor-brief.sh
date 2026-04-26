@@ -17,6 +17,7 @@ REPO_ROOT="${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || 
 STATE_FILE="$REPO_ROOT/.claude/project-state.md"
 LEARNINGS_FILE="$REPO_ROOT/.claude/learnings.md"
 GRAPH_REPORT="$REPO_ROOT/graphify-out/GRAPH_REPORT.md"
+CRG_DB_DIR="$REPO_ROOT/.code-review-graph"
 
 echo "=== conductor brief ==="
 
@@ -69,7 +70,7 @@ else
   echo "  see .claude/skills/brain-mcp/SKILL.md for why this is recommended."
 fi
 
-# 4. graphify graph freshness — structural codebase context.
+# 4. graphify graph freshness — structural codebase context (exploration).
 if [ -f "$GRAPH_REPORT" ]; then
   if command -v stat >/dev/null 2>&1; then
     if stat -c %Y "$GRAPH_REPORT" >/dev/null 2>&1; then
@@ -91,7 +92,22 @@ elif command -v graphify >/dev/null 2>&1; then
   echo "[graphify available, no graph yet] for structural questions:  graphify ./"
 fi
 
-# 5. Phase hint from cheap git heuristics. Conductor will refine this.
+# 5. code-review-graph (CRG) — incremental review-time graph.
+#    Looks for the SQLite DB rather than a report file (CRG persists state in
+#    .code-review-graph/). Different concern than graphify: CRG is the
+#    always-fresh review graph, graphify is the multi-modal exploration graph.
+if [ -d "$CRG_DB_DIR" ]; then
+  echo ""
+  echo "[code-review-graph wired] incremental code graph at .code-review-graph/."
+  echo "  before reviewing a diff, prefer:"
+  echo "    detect_changes_tool / get_review_context_tool / get_impact_radius_tool"
+  echo "  see .claude/skills/code-review-graph/SKILL.md for the 28-tool cheat sheet."
+elif command -v code-review-graph >/dev/null 2>&1; then
+  echo ""
+  echo "[code-review-graph available, no graph yet] for first build:  code-review-graph build"
+fi
+
+# 6. Phase hint from cheap git heuristics. Conductor will refine this.
 if git -C "$REPO_ROOT" rev-parse --git-dir >/dev/null 2>&1; then
   commit_count=$(git -C "$REPO_ROOT" rev-list --all --count 2>/dev/null || echo 0)
   tag_count=$(git -C "$REPO_ROOT" tag 2>/dev/null | wc -l | tr -d ' ')

@@ -131,6 +131,7 @@ Beyond per-service matches above, these broader triggers propose MCPs:
 | Project uses local Postgres for dev (detected above) | `postgres` (opt-in) — stack-scoped |
 | **Always** (continuity layer) | `brain-mcp` — strongly recommended; default ON in interview |
 | Codebase is non-trivial (>30 source files OR a recognized framework) | `graphify` — recommended; default ON in interview |
+| Codebase is non-trivial AND active (commits in last 30 days) | `code-review-graph` — recommended for review-time tasks; default ON in interview for building/established phases. Skip for greenfield. |
 
 The always-on core MCPs (`filesystem`, `fetch`, `git`, `memory`,
 `sequential-thinking`, `time`) go in every project regardless of stack.
@@ -148,6 +149,9 @@ interview can recommend defaults rather than ask:
 | `command -v brain-mcp` fails | `brain_mcp_installed: false` — print install command (`pipx install brain-mcp && brain-mcp setup`) and continue. Don't block init. |
 | `command -v graphify` succeeds | `graphify_installed: true` — default ON for non-trivial repos |
 | `command -v graphify` fails AND repo is non-trivial | print install command (`pip install graphifyy && graphify install`); leave wiring for re-init |
+| `command -v code-review-graph` succeeds | `crg_installed: true` — default ON for non-trivial active repos (skip for greenfield) |
+| `command -v code-review-graph` fails AND repo is non-trivial-and-active | print install command (`pip install code-review-graph && code-review-graph install`); leave wiring for re-init |
+| `.code-review-graph/` directory exists in repo root | `crg_db_present: true` — graph already built; surface in init summary |
 | `.claude/project-state.md` exists | `state_file_present: true` — do not overwrite during init; merge writes a skeleton ONLY when absent |
 | `graphify-out/GRAPH_REPORT.md` exists | `graph_present: true`, `graph_age_days: <N>` — surface in init summary, suggest rebuild if >14 days |
 
@@ -175,10 +179,12 @@ Return a structured findings object the interview phase consumes:
   "stacks": ["python"],
   "frameworks": ["fastapi"],
   "external_services": ["postgres", "github"],
-  "candidate_mcps": ["postgres", "github", "brain-mcp", "graphify"],
+  "candidate_mcps": ["postgres", "github", "brain-mcp", "graphify", "code-review-graph"],
   "continuity": {
     "brain_mcp_installed": true,
     "graphify_installed": false,
+    "crg_installed": false,
+    "crg_db_present": false,
     "state_file_present": false,
     "graph_present": false,
     "graph_age_days": null
