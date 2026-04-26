@@ -21,44 +21,77 @@ Batch as multi-select with a short note on credentials for each.
 ### Continuity layer (special handling)
 
 Two MCPs are part of the dotclaude **continuity layer** and get
-default-ON treatment, not default-OFF like the others:
+default-ON treatment, not default-OFF like the others. Both also get a
+**three-way question** — wire only, wire and install now, or skip —
+rather than the usual yes/no, because installing them is a one-time
+machine-wide step the user may want init to handle while they're
+already paying attention.
 
-- **`brain-mcp`** — cross-agent persistent memory. Default ON. Phrasing:
+- **`brain-mcp`** — cross-agent persistent memory. Phrasing depends on
+  whether the binary is already on PATH:
 
-  > "Wire brain-mcp for cross-agent memory? (Default ON. Free, MIT,
-  > 100% local. Lets you switch between Claude Code, Cursor, Codex
-  > without losing context. Requires `pipx install brain-mcp` once.)"
+  **If `continuity.brain_mcp_installed` is true:**
 
-  Behavior based on scan:
-  - If `continuity.brain_mcp_installed` is true → wire it into
-    `.mcp.json` automatically; the user only opts out, not in.
-  - If false → still default ON in the answer, but print at the end
-    of the run: "brain-mcp wired but not yet installed. Run
-    `pipx install brain-mcp && brain-mcp setup` to activate."
-  - The `brain-mcp setup` command is the recommended global path —
-    once run, brain-mcp is wired into every agent on the machine.
-    The project's `.mcp.json` entry is for project-isolated brains,
-    which is rare. Surface this distinction in the question note.
+  > "Wire brain-mcp for cross-agent memory? (Default: yes. Already
+  > installed on this machine — just adds the wiring.)"
+  >
+  > Options: `[ ] yes (default)` · `[ ] no, skip`
 
-- **`graphify`** — multi-modal codebase knowledge graph. Default ON
-  for non-trivial repos (>30 source files OR a recognized framework).
-  Phrasing:
+  **If `continuity.brain_mcp_installed` is false:**
 
-  > "Wire graphify for a queryable code graph? (Default ON. Free, MIT,
-  > local-first. Tree-sitter + LLM extraction + Leiden clustering.
-  > Requires `pip install graphifyy` once. Worth it for repos big
-  > enough to need 'where do I even start' questions.)"
+  > "Wire brain-mcp for cross-agent memory? (Default: wire-only.
+  > Free, MIT, 100% local. Lets you switch between Claude Code,
+  > Cursor, Codex without losing context. The binary isn't installed
+  > yet — I can run `pipx install brain-mcp && brain-mcp setup` for
+  > you now if you want.)"
+  >
+  > Options:
+  > - `[x] wire only — I'll install brain-mcp myself later (default)`
+  > - `[ ] wire AND install now — run pipx install + brain-mcp setup with my confirmation`
+  > - `[ ] skip both wiring and install`
 
-  Behavior:
-  - If `continuity.graphify_installed` is true → wire and invite the
-    user to run `graphify ./` after init.
-  - If false → wire and print the install command at the end.
-  - For trivial repos (<30 files, no framework), default OFF — overhead
-    beats benefit at small scale. Still offer it, just default-unchecked.
+  The `brain-mcp setup` command is the recommended global path —
+  once run, brain-mcp is wired into every agent on the machine. The
+  project's `.mcp.json` entry is for project-isolated brains, which
+  is rare. Mention this distinction inline if the user asks.
+
+- **`graphify`** — multi-modal codebase knowledge graph. Same three-way
+  pattern, gated on repo size:
+
+  **If `continuity.graphify_installed` is true:**
+
+  > "Wire graphify for a queryable code graph? (Default: yes for
+  > non-trivial repos.)"
+  >
+  > Options: `[ ] yes (default for >30 files / recognized framework)` · `[ ] no, skip`
+
+  **If `continuity.graphify_installed` is false AND repo is non-trivial:**
+
+  > "Wire graphify for a queryable code graph? (Default: wire-only.
+  > Free, MIT, local-first. Tree-sitter + Leiden clustering.
+  > Worth it for repos big enough to need 'where do I even start'
+  > questions. Not installed yet — I can run
+  > `pip install graphifyy && graphify install` for you now.)"
+  >
+  > Options:
+  > - `[x] wire only — install graphifyy myself later (default)`
+  > - `[ ] wire AND install now — run pip install + graphify install with my confirmation`
+  > - `[ ] skip both wiring and install`
+
+  For **trivial** repos (<30 files, no framework), default to
+  "skip both" but still offer the question — leave the option visible.
+
+**Confirmation discipline if "wire AND install now" is chosen:**
+init does NOT run the install commands silently. Even after the user
+picks the install option, init prints the exact commands it's about
+to run and asks one final yes/no per command before invoking shell.
+Anything that fails is non-fatal — print the error, suggest the
+manual command, and continue with the rest of init. The wiring still
+goes in either way.
 
 Don't gate the rest of init on these answers. The continuity layer
-degrades gracefully — if brain-mcp isn't installed, the agent simply
-won't try to call it.
+degrades gracefully — if brain-mcp isn't installed, the conductor
+brief says so and the agent skips that step.
 
 ## Phase 3 — always-ask invisibles
 

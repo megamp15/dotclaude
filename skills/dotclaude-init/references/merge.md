@@ -118,6 +118,64 @@ all three:
 State file is **project-owned** — no `source:` frontmatter, never
 touched by `dotclaude-sync`.
 
+## Optional install step (only when user opted in)
+
+If the interview answered "wire AND install now" for brain-mcp or
+graphify, run the installs **after** all file writes succeed, never
+before. Order matters: file writes are deterministic and reversible;
+shell installs are not.
+
+For each opted-in install, follow this contract strictly:
+
+1. **Print** the exact command(s) about to run, one per line:
+
+   ```
+   About to run for brain-mcp:
+     pipx install brain-mcp
+     brain-mcp setup
+   ```
+
+2. **Ask one yes/no** before invoking shell. A single confirmation per
+   tool is enough — don't ask separately for `pipx install` vs
+   `brain-mcp setup`. The user already opted in during the interview;
+   this is the safety reconfirmation.
+
+3. **Run, capturing exit codes.** Stream output so the user sees
+   progress. Do NOT swallow stderr.
+
+4. **On failure:**
+   - Print the failing command and its stderr.
+   - Print the manual recovery command verbatim, copy-pastable.
+   - Continue init. Don't roll back the wiring — the wiring is
+     correct; only the install failed. The user can re-run the
+     install later and the wiring will activate immediately.
+
+5. **On success:**
+   - For brain-mcp: print "brain-mcp installed and wired into all
+     supported agents on this machine. Restart your agent to pick
+     it up."
+   - For graphify: print "graphify installed. Run `graphify ./` in
+     this repo to build the initial graph."
+
+**Never auto-run anything else.** Don't `git commit`, don't restart
+agents, don't run `graphify ./` automatically — those are the user's
+calls. Init's job ends at: files written, deterministic state, prereqs
+installed if asked, clear next-step instructions printed.
+
+### Platform notes
+
+- `pipx` may not be on PATH. If `command -v pipx` fails before the
+  brain-mcp install, suggest `python -m pip install --user pipx &&
+  pipx ensurepath` as the prerequisite, then continue with the
+  brain-mcp install (or skip if the user declines the prereq).
+- `pip install graphifyy` works in any active Python env. If the
+  user is in a project venv, ask once whether they want graphify in
+  the venv or globally (`pipx install graphifyy` for global). Default:
+  global (`pipx`), since graphify is a CLI tool used across projects.
+- On Windows without WSL, `pipx` paths can be unusual. Print the
+  commands; if shell invocation fails outright, fall back to
+  print-only and let the user paste them into their terminal.
+
 ## Conflict handling on re-init
 
 If a target file exists with `source:` matching current source, and content differs → this is a user edit. Ask:

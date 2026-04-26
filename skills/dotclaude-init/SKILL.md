@@ -28,9 +28,10 @@ Not for pulling upstream updates — that's `/dotclaude-sync`.
 1. **Locate dotclaude** — resolve `DOTCLAUDE_HOME`; error clearly if unset.
 2. **Scan the repo** → see `references/scanning.md`. Detect stack, frameworks, external services, existing `.claude/`, and the **continuity-layer state** (is brain-mcp installed? graphify installed? does `.claude/project-state.md` exist? is there a fresh graph?).
 3. **Present findings checklist** — show what was inferred; user confirms or corrects with AskUserQuestion.
-4. **Ask the invisibles** → see `references/interview.md`. Only things grep can't reveal: rate limits, owners, reasons, sensitive paths. The continuity MCPs (`brain-mcp`, `graphify`) get default-ON treatment, not default-OFF — they're foundational, not optional.
+4. **Ask the invisibles** → see `references/interview.md`. Only things grep can't reveal: rate limits, owners, reasons, sensitive paths. The continuity MCPs (`brain-mcp`, `graphify`) get default-ON treatment with a **three-way choice** — wire only, wire AND install now, or skip. Init never installs them silently; the install option is offered and gated by a final per-tool confirmation.
 5. **Merge** → see `references/merge.md`. Core + stack → flat `.claude/`; interview answers → `rules/project.md` + `CLAUDE.md` "Project context" section. **Seed `.claude/project-state.md`** if it doesn't already exist, with phase pre-filled from cheap git heuristics.
-6. **Report** — list every file written, group by `source:` (core / stack / project), flag any guesses the user should review. **If brain-mcp / graphify were wired but not yet installed**, print the install commands at the very end so the user can copy-paste.
+6. **Optional install step** — only if the user picked "wire AND install now" for brain-mcp or graphify in step 4. Print the exact commands, ask one yes/no per tool, run with streamed output, fail-soft (print manual recovery, continue init). See the "Optional install step" section in `references/merge.md`.
+7. **Report** — list every file written, group by `source:` (core / stack / project), flag any guesses the user should review. **If brain-mcp / graphify were wired but install was skipped or failed**, print the install commands at the very end so the user can copy-paste.
 
 ## Reference guide
 
