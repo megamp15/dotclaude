@@ -66,6 +66,10 @@ dotclaude/
 │   │                                    # + learnings-log (Ralph-style append-only memory:
 │   │                                    #   .claude/learnings.md, zero-dep cross-session
 │   │                                    #   memory baseline; composes with brain-mcp)
+│   │                                    # + permissions-tuner (auto-mode-aligned
+│   │                                    #   permission tuning: 4-layer model,
+│   │                                    #   auto-mode setup, 8-category threat model,
+│   │                                    #   audit workflow)
 │   ├── conventions/                     # cross-cutting conventions (non-rule docs):
 │   │                                    #   ported-skills.md (provenance for skills
 │   │                                    #                     adapted from external sources)
@@ -182,10 +186,17 @@ dotclaude/
 │   └── dotclaude-init-agents-md/        # → AGENTS.md only (universal fallback)
 │       └── SKILL.md
 │
-└── commands/                            # Claude Code slash-command wrappers over the six
-                                         # framework skills. Deterministic /-menu invocation
-                                         # alongside natural-language activation via skills.
-                                         # Installed into ~/.claude/commands/.
+├── commands/                            # Claude Code slash-command wrappers (framework + tools).
+│                                        # Deterministic /-menu invocation alongside
+│                                        # natural-language activation via skills.
+│                                        # Installed into ~/.claude/commands/ (framework
+│                                        # commands) or .claude/commands/ (project commands
+│                                        # like /dotclaude-resume, /dotclaude-learn,
+│                                        # /dotclaude-permissions-audit).
+└── scripts/                             # Backing scripts for slash commands and standalone
+                                         # utilities. Installed into .claude/scripts/.
+                                         # Includes dotclaude-resume.sh and
+                                         # dotclaude-permissions-audit.sh.
     ├── dotclaude-init.md
     ├── dotclaude-sync.md
     ├── dotclaude-init-cursor.md
@@ -617,6 +628,42 @@ no nags.
 - Seeds `.claude/project-state.md` with the detected phase if the file doesn't already exist.
 - Seeds `.claude/learnings.md` with a minimal header + one example entry if the file doesn't already exist (zero-dep cross-session memory baseline).
 - If brain-mcp / graphify aren't installed locally and the user didn't opt into the install step, prints the install commands at the end of init.
+
+## Permissions (auto-mode-aligned)
+
+Default agents ask before almost every command. dotclaude reduces that
+friction safely by composing four layers:
+
+| Layer | Lives in | What it catches |
+|---|---|---|
+| **1. Allow rules** | `.claude/settings.json#permissions.allow` (deep-merged from `core/settings.partial.json` + the matching `stacks/<lang>/settings.partial.json`) | Read-only / safe-by-intent commands run with no prompt |
+| **2. Deny rules** | `permissions.deny` in the same files | The eight-category threat model: destroy data, destroy infra, exfiltrate secrets, cross trust boundary, bypass review, persist access, disable logging, modify own permissions |
+| **3. Static safety hook** | `core/hooks/block-dangerous-commands.sh` (registered in `core/settings.partial.json`) | Wrapped or escaped destructive patterns the static rules can't pattern-match. Falls back from `jq` to `python3` to `sed` so it works on minimal containers. |
+| **4. User overrides** | `.claude/settings.local.json` (gitignored) | Per-developer habits without polluting the repo |
+
+The full philosophy and the relationship to Claude Code's
+[auto-mode](https://www.anthropic.com/engineering/claude-code-auto-mode)
+classifier live in `core/skills/permissions-tuner/SKILL.md`, with
+references for [auto-mode setup](core/skills/permissions-tuner/references/auto-mode-setup.md),
+the [eight-category threat model](core/skills/permissions-tuner/references/threat-model.md),
+and the [audit workflow](core/skills/permissions-tuner/references/audit-workflow.md).
+
+### `/dotclaude-permissions-audit`
+
+Read-only audit comparing the project's `.claude/settings.json` against
+dotclaude defaults and the threat model. Flags over-broad allow rules,
+missing deny categories, hook misconfigurations, and drift. Exits
+non-zero on critical findings — safe to run in CI.
+
+```bash
+/dotclaude-permissions-audit            # standard report
+/dotclaude-permissions-audit --diff     # full drift detail vs core defaults
+/dotclaude-permissions-audit --strict   # treat broad interpreter allows as critical
+/dotclaude-permissions-audit --json     # machine-readable
+```
+
+Backed by `scripts/dotclaude-permissions-audit.sh` (deployed to
+`.claude/scripts/` by `dotclaude-init`).
 
 ## References & inspiration
 

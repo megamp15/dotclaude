@@ -1,5 +1,5 @@
 {
-  "_comment": "source: stacks/terraform — deep-merged with core. Allows read-only and plan ops; denies destroy/apply-auto variants. The block-destroy-apply hook adds defense-in-depth at the hook layer.",
+  "_comment": "source: stacks/terraform — deep-merged with core. Allows read-only and plan ops; denies destroy/apply-auto variants and state surgery. The block-destroy-apply hook adds defense-in-depth at the hook layer for things the static deny list can't catch (e.g., apply via wrappers, auto-approve passed via env or .auto.tfvars).",
   "permissions": {
     "allow": [
       "Bash(terraform fmt:*)",
@@ -12,19 +12,44 @@
       "Bash(terraform version)",
       "Bash(terraform workspace list)",
       "Bash(terraform workspace show)",
+      "Bash(terraform workspace select:*)",
+      "Bash(terraform state list:*)",
+      "Bash(terraform state show:*)",
+      "Bash(terraform get:*)",
+      "Bash(terraform graph:*)",
       "Bash(tflint:*)",
       "Bash(tfsec:*)",
-      "Bash(checkov:*)"
+      "Bash(checkov:*)",
+      "Bash(terraform-docs:*)",
+      "Bash(infracost breakdown:*)",
+      "Bash(infracost diff:*)",
+      "Bash(opentofu fmt:*)",
+      "Bash(opentofu validate:*)",
+      "Bash(opentofu init:*)",
+      "Bash(opentofu plan:*)",
+      "Bash(opentofu show:*)"
     ],
     "deny": [
       "Bash(terraform destroy:*)",
       "Bash(terraform apply:* -auto-approve:*)",
       "Bash(terraform apply -auto-approve:*)",
+      "Bash(terraform apply --auto-approve:*)",
+      "Bash(terraform apply:*)",
       "Bash(terraform state rm:*)",
       "Bash(terraform state mv:*)",
+      "Bash(terraform state push:*)",
+      "Bash(terraform state replace-provider:*)",
       "Bash(terraform taint:*)",
+      "Bash(terraform untaint:*)",
+      "Bash(terraform import:*)",
       "Bash(terraform workspace delete:*)",
-      "Bash(terraform force-unlock:*)"
+      "Bash(terraform workspace new:*)",
+      "Bash(terraform force-unlock:*)",
+      "Bash(terraform login:*)",
+      "Bash(terraform logout)",
+      "Bash(opentofu apply:*)",
+      "Bash(opentofu destroy:*)",
+      "Bash(opentofu state rm:*)"
     ]
   },
   "hooks": {

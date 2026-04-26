@@ -17,6 +17,7 @@ produces a byte-identical `.claude/`.
 | `stacks/<s>/agents/*.md` | `.claude/agents/*.md` | Copy + source tag |
 | `core/hooks/*` | `.claude/hooks/*` | Copy, preserve executable bit |
 | `stacks/<s>/hooks/*` | `.claude/hooks/*` | Copy, preserve executable bit |
+| `scripts/dotclaude-permissions-audit.sh` (and any future `scripts/*.sh`) | `.claude/scripts/*.sh` | Copy, preserve executable bit. Backs the matching slash command. |
 | `core/settings.partial.json` + `stacks/<s>/settings.partial.json` | `.claude/settings.json` | Deep-merge (see below) |
 | `core/mcp/mcp.partial.json` + opted-in optionals + `stacks/<s>/mcp/*.mcp.json` | `.mcp.json` at project root | Deep-merge `mcpServers` map |
 | `core/CLAUDE.base.md` + `stacks/<s>/CLAUDE.stack.md` + interview | `.claude/CLAUDE.md` | Template render with three sections |
@@ -28,6 +29,17 @@ produces a byte-identical `.claude/`.
 - **`hooks.<event>`** — concatenate entries; entries with the same `matcher` have their `hooks` arrays concatenated (not deduped — duplicates are a user's problem).
 - **`mcpServers.<name>`** — object merge. If a stack and core both define the same server name, the stack wins.
 - **Anything else** — last-writer-wins with stack > core.
+- **Underscore-prefixed metadata keys** (`_comment`, `_allow_groups`, `_deny_groups`, etc.) — strip from final output. They exist for human readability in the partials but Claude Code ignores them; emitting them in the merged file just adds noise.
+
+### Permission-merge invariants the audit will check later
+
+After deep-merge, the resulting `permissions` object MUST satisfy:
+
+1. No `allow` entry matches `^Bash\(\*\)$` or any other "match-all" form.
+2. Every category in the threat model (`core/skills/permissions-tuner/references/threat-model.md`) has at least one matching `deny` entry.
+3. Every `hooks.PreToolUse` entry's `command` resolves to an existing executable file relative to `.claude/`.
+
+If any invariant fails after merge, init prints a `[CRITICAL]` warning at the end of its summary and points at `/dotclaude-permissions-audit` for detail. Init does not block on these — the user's project-level overrides are sovereign — but they should be loud.
 
 ## Source tagging
 

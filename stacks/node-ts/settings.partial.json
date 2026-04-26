@@ -1,5 +1,5 @@
 {
-  "_comment": "source: stacks/node-ts — deep-merged with core. Adds JS/TS tool allowlists and registers the prettier format hook at the stack level.",
+  "_comment": "source: stacks/node-ts — deep-merged with core. Adds JS/TS tool allowlists and registers the prettier format hook. The wide Bash(npm:*)/Bash(pnpm:*) allows are intentional — package-manager subcommands are mostly safe, and the deny list catches the dangerous ones (publish, --force, postinstall scripts on untrusted installs). Tighten to specific subcommands if your trust model is stricter.",
   "permissions": {
     "allow": [
       "Bash(pnpm:*)",
@@ -8,20 +8,42 @@
       "Bash(bun:*)",
       "Bash(npx:*)",
       "Bash(pnpm dlx:*)",
+      "Bash(yarn dlx:*)",
+      "Bash(bunx:*)",
       "Bash(node:*)",
+      "Bash(deno:*)",
       "Bash(tsc:*)",
       "Bash(tsx:*)",
+      "Bash(ts-node:*)",
       "Bash(vitest:*)",
       "Bash(jest:*)",
+      "Bash(playwright:*)",
       "Bash(eslint:*)",
-      "Bash(prettier:*)"
+      "Bash(prettier:*)",
+      "Bash(biome:*)",
+      "Bash(turbo:*)",
+      "Bash(nx:*)"
     ],
     "deny": [
       "Bash(npm publish:*)",
       "Bash(pnpm publish:*)",
       "Bash(yarn publish:*)",
-      "Bash(npm:* --force)",
-      "Bash(pnpm:* --force)"
+      "Bash(bun publish:*)",
+      "Bash(npm:* --force:*)",
+      "Bash(pnpm:* --force:*)",
+      "Bash(yarn:* --force:*)",
+      "Bash(npm install:* --no-package-lock:*)",
+      "Bash(pnpm install:* --no-lockfile:*)",
+      "Bash(yarn install:* --no-lockfile:*)",
+      "Bash(npm install:* --ignore-scripts=false --:*)",
+      "Bash(npm config set:*)",
+      "Bash(pnpm config set:*)",
+      "Bash(yarn config set:*)",
+      "Bash(npm token:*)",
+      "Bash(npm adduser:*)",
+      "Bash(npm login:*)",
+      "Bash(pnpm login:*)",
+      "Bash(yarn npm login:*)"
     ]
   },
   "hooks": {
