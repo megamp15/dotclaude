@@ -47,6 +47,77 @@ Files without `source:` are **project-owned**. `/dotclaude-sync` will never touc
 - **Narrative** (description, context, owners) → `.claude/CLAUDE.md` "Project context" section, between `<!-- project-start -->` and `<!-- project-end -->` markers so sync can safely regenerate the other sections around it
 - **Raw answers cache** → `.claude/.dotclaude-interview.json` (gitignored)
 
+## Continuity layer setup
+
+The continuity layer (project-conductor + the SessionStart conductor
+brief + the agent-agnostic state file) is foundational. Init wires
+all three:
+
+1. **Skill copy** — `core/skills/project-conductor/` is copied into
+   `.claude/skills/` as part of the normal `core/skills/**` recursive
+   copy. No special handling.
+2. **Hook copy + registration** — `core/hooks/conductor-brief.sh` is
+   copied into `.claude/hooks/` and is already registered in
+   `core/settings.partial.json` under `SessionStart`. The settings
+   deep-merge picks this up automatically.
+3. **State file seed** — if `.claude/project-state.md` does **not**
+   already exist, init writes a skeleton populated with what's
+   knowable from scan + git:
+
+   ```markdown
+   # Project state
+
+   - **Phase:** <detected phase from git heuristics>
+   - **Updated:** <ISO date> by dotclaude-init
+   - **Driver skill:** project-conductor
+   - **Brain domain:** <repo name>
+
+   ## Current focus
+
+   <empty — first conductor pass will fill this>
+
+   ## Recent decisions
+
+   - [<today>] Adopted dotclaude — stacks: <stacks>; frameworks: <frameworks>; continuity layer wired (brain-mcp: <on|off>, graphify: <on|off>).
+
+   ## Open questions
+
+   <empty>
+
+   ## Next steps
+
+   1. Run `project-conductor` on next session to refine phase + focus.
+   2. <if brain-mcp wired but not installed> Install brain-mcp: `pipx install brain-mcp && brain-mcp setup`.
+   3. <if graphify wired but no graph yet> Build initial graph: `graphify ./`.
+
+   ## Don't lose
+
+   <empty — populated as the project accrues gotchas>
+
+   ## Handoff
+
+   <empty>
+
+   ---
+   _Last conductor pass: <today> (init)_
+   ```
+
+   **Phase detection (init-time, cheap):**
+   - `git rev-list --all --count` ≤ 3 → `greenfield`
+   - last commit > 90 days ago → `maintenance`
+   - any `git tag` exists → `established`
+   - otherwise → `building`
+
+   This is intentionally a coarse first guess. project-conductor
+   refines it on its first real session.
+
+4. **Existing state file** — if `.claude/project-state.md` already
+   exists, do **not** overwrite. Print: "kept existing
+   `.claude/project-state.md` — let project-conductor refresh it."
+
+State file is **project-owned** — no `source:` frontmatter, never
+touched by `dotclaude-sync`.
+
 ## Conflict handling on re-init
 
 If a target file exists with `source:` matching current source, and content differs → this is a user edit. Ask:

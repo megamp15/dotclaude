@@ -72,7 +72,11 @@ dotclaude/
 │   ├── hooks/                           # block-dangerous-commands, protect-files,
 │   │                                    # scan-secrets, warn-large-files,
 │   │                                    # session-start, notify, format-on-save,
-│   │                                    # auto-test, context-recovery
+│   │                                    # auto-test, context-recovery,
+│   │                                    # conductor-brief (continuity layer:
+│   │                                    #   prints project-state.md + brain-mcp
+│   │                                    #   + graphify availability + phase hint
+│   │                                    #   on every SessionStart)
 │   ├── templates/                       # CLAUDE.local.md, settings.local.json  (one-shot copy)
 │   └── mcp/                             # filesystem, fetch, git, memory,
 │       ├── mcp.partial.json             # sequential-thinking, time  (always-on)
@@ -528,27 +532,60 @@ skill).
 
 ## Cross-agent continuity (memory + graph + conductor)
 
-Three independently useful pieces that compose into one outcome: **0
-context loss when you move between agents, and lifecycle-aware behavior
-across a project's life.**
+The continuity layer is **default-on infrastructure**, not optional
+add-ons. It guarantees that switching between Claude Code, Cursor,
+Codex, OpenCode, or Gemini CLI doesn't cost you context — and that
+every cold start begins with a re-entry brief, automatically.
 
-| Concern | Tool | Where it lives | Fits where |
-|---|---|---|---|
-| Conversation history across every AI tool you use (Claude Code, Cursor, Codex, Windsurf, Gemini CLI) | [`brain-mcp`](https://github.com/mordechaipotash/brain-mcp) (MIT, local) | `core/mcp/optional/brain-mcp.mcp.json` + `core/mcp/skills/brain-mcp/SKILL.md` | Wired globally with `brain-mcp setup`; project-scoped only when you want a brain isolated to one repo |
-| Structural map of the codebase — code, docs, papers, diagrams as one queryable knowledge graph | [`graphify`](https://github.com/safishamsi/graphify) (MIT, local-first) | `core/mcp/optional/graphify.mcp.json` + `core/mcp/skills/graphify/SKILL.md` | Per-project. Run `graphify ./` once; query via slash commands or `graphify serve` |
-| Phase detection (greenfield / building / established / maintenance / migration), routing to the right driver skill, and a portable `.claude/project-state.md` | `project-conductor` | `core/skills/project-conductor/` | Run on every cold start; updated at the end of substantive sessions |
+### How it's wired
 
-**The composition:**
+| Layer | Where | What it does |
+|---|---|---|
+| **`conductor-brief.sh`** SessionStart hook | `core/hooks/` (registered in `core/settings.partial.json`) | Auto-runs at every session start. Prints `.claude/project-state.md`, brain-mcp / graphify availability, and a phase hint *before* the user types anything. |
+| **`CLAUDE.md` Continuity section** | `core/CLAUDE.base.md` (top-level section) | Instructs every agent — Claude Code, Cursor, Codex, OpenCode, Gemini CLI — to read `project-state.md` first and call brain-mcp on cold start. The cross-agent guarantee for tools that don't support hooks. |
+| **`/dotclaude-resume` command** + `scripts/dotclaude-resume.sh` | `commands/`, `scripts/` | Manual invocation: prints the brief on demand. Useful for agents without SessionStart hooks, after `/clear`, or when pasting context into a different agent. |
+| **`project-conductor` skill** | `core/skills/project-conductor/` | Drives when the user explicitly asks "where are we", when phase ambiguity needs a real conversation, and when state needs updating at the end of substantive work. |
+| **brain-mcp** (default ON in init) | `core/mcp/optional/brain-mcp.mcp.json` + `core/mcp/skills/brain-mcp/SKILL.md` | Cross-agent persistent memory ([brain-mcp](https://github.com/mordechaipotash/brain-mcp), MIT, 100% local). 25 MCP tools. Recommended global install: `pipx install brain-mcp && brain-mcp setup`. |
+| **graphify** (default ON for non-trivial repos) | `core/mcp/optional/graphify.mcp.json` + `core/mcp/skills/graphify/SKILL.md` | Multi-modal codebase knowledge graph ([graphify](https://github.com/safishamsi/graphify), MIT, local-first). Tree-sitter + Leiden clustering. Install: `pip install graphifyy && graphify install`. |
 
-- `brain-mcp` keeps the **conversational** context (what was said, decided, doubted).
+### The composition
+
+- `brain-mcp` keeps the **conversational** context (what was said, decided, doubted across every AI tool you use).
 - `graphify` keeps the **structural** context (what calls what, what's load-bearing, what's surprising).
-- `project-conductor` keeps the **intent** context (what phase, what's next, what not to lose) and orchestrates handoff via a single file (`.claude/project-state.md`) that any agent on any platform can read.
+- `.claude/project-state.md` keeps the **intent** context (what phase, what's next, what not to lose) — agent-agnostic Markdown, lives in git.
 
-When you switch from Claude Code to Cursor (or vice versa), the new agent
-runs `project-conductor`, which reads `.claude/project-state.md`, queries
-brain-mcp for recent context, and reads `graphify-out/GRAPH_REPORT.md` if
-present — and emits a six-line re-entry brief in seconds. None of the
-three components depend on the others; install only what you need.
+### The cold-start loop
+
+1. You open a project in any agent.
+2. `conductor-brief.sh` fires (or, on agents without SessionStart hooks, the agent reads the Continuity section in `CLAUDE.md` and runs the equivalent inline). The brief shows the project state, the brain-mcp tools to call, and the phase hint.
+3. The agent calls `brain.context_recovery(domain=<project>)` and `brain.open_threads()` for conversational context.
+4. If the change is structural, the agent reads `graphify-out/GRAPH_REPORT.md`.
+5. The agent confirms the brief with you in 1-2 sentences and proposes the next concrete action — or just acts if the next step is unambiguous.
+6. At the end of substantive work, the agent updates `.claude/project-state.md`. You commit it. The next agent — possibly on a different platform — starts at step 1 with full context.
+
+### Install (global, one-time per machine)
+
+```bash
+# brain-mcp — wires into every agent on the machine
+pipx install brain-mcp
+brain-mcp setup
+
+# graphify — per-project graph builder + slash commands
+pip install graphifyy
+graphify install
+```
+
+Both gracefully degrade — if either isn't installed, the conductor brief
+says so and the agent skips the corresponding step. No errors, no nags.
+
+### Per-project setup
+
+`dotclaude-init` handles this automatically:
+
+- Wires brain-mcp (default ON) and graphify (default ON for non-trivial repos) into `.mcp.json`.
+- Copies `conductor-brief.sh` into `.claude/hooks/` and registers it in `.claude/settings.json`.
+- Seeds `.claude/project-state.md` with the detected phase if the file doesn't already exist.
+- If brain-mcp / graphify aren't installed locally, prints the install commands at the end of init.
 
 ## References & inspiration
 

@@ -13,6 +13,29 @@ inherited, or returning after a break — `project-conductor` figures out
 should drive**. It also writes the durable handoff file (`.claude/project-state.md`)
 that lets a different agent pick up where this one left off.
 
+## Activation (you don't have to ask for it)
+
+This skill is wired in three places:
+
+1. **SessionStart hook** (default for Claude Code): every new session,
+   `.claude/hooks/conductor-brief.sh` injects the re-entry brief
+   automatically — `.claude/project-state.md`, brain-mcp / graphify
+   availability, a phase hint. The agent sees this *before* the user
+   types anything.
+2. **`CLAUDE.md` Continuity section**: every agent (Claude Code, Cursor,
+   Codex, OpenCode, Gemini CLI, ...) is instructed to read
+   `.claude/project-state.md` and call `brain-mcp` on cold start. This
+   is the cross-agent guarantee — if a hook isn't supported, the
+   instruction is.
+3. **`/dotclaude-resume` command** + `scripts/dotclaude-resume.sh`:
+   manual fallback for agents without SessionStart hooks, or for the
+   user when context drops mid-session.
+
+So: the conductor *brief* runs automatically. The conductor *skill*
+(this file) drives when the user explicitly asks "where are we", or
+when phase ambiguity needs a real conversation, or when state needs
+updating at the end of substantive work.
+
 > **See also:**
 >
 > - `core/mcp/skills/brain-mcp/` — cross-agent conversation history

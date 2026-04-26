@@ -129,10 +129,30 @@ Beyond per-service matches above, these broader triggers propose MCPs:
 | Project is a frontend/webapp (React/Vue/Svelte/Next + a dev server) | `chrome-devtools` (opt-in) — heavy context, so off by default |
 | Project has a `.github/` directory or GitHub remote | `github` (opt-in) — requires PAT |
 | Project uses local Postgres for dev (detected above) | `postgres` (opt-in) — stack-scoped |
+| **Always** (continuity layer) | `brain-mcp` — strongly recommended; default ON in interview |
+| Codebase is non-trivial (>30 source files OR a recognized framework) | `graphify` — recommended; default ON in interview |
 
 The always-on core MCPs (`filesystem`, `fetch`, `git`, `memory`,
 `sequential-thinking`, `time`) go in every project regardless of stack.
 See `core/mcp/README.md` for the full list.
+
+## Continuity layer detection
+
+The continuity layer (project-conductor + brain-mcp + graphify) is
+foundational, not optional. Detect what's already installed so the
+interview can recommend defaults rather than ask:
+
+| Check | Sets |
+|---|---|
+| `command -v brain-mcp` succeeds | `brain_mcp_installed: true` — default ON in interview, auto-wire to `.mcp.json` unless user opts out |
+| `command -v brain-mcp` fails | `brain_mcp_installed: false` — print install command (`pipx install brain-mcp && brain-mcp setup`) and continue. Don't block init. |
+| `command -v graphify` succeeds | `graphify_installed: true` — default ON for non-trivial repos |
+| `command -v graphify` fails AND repo is non-trivial | print install command (`pip install graphifyy && graphify install`); leave wiring for re-init |
+| `.claude/project-state.md` exists | `state_file_present: true` — do not overwrite during init; merge writes a skeleton ONLY when absent |
+| `graphify-out/GRAPH_REPORT.md` exists | `graph_present: true`, `graph_age_days: <N>` — surface in init summary, suggest rebuild if >14 days |
+
+Add these to the scan output object alongside `stacks`, `frameworks`, etc.
+The interview consumes them to default the right MCP toggles.
 
 ## Existing `.claude/` detection
 
@@ -155,7 +175,14 @@ Return a structured findings object the interview phase consumes:
   "stacks": ["python"],
   "frameworks": ["fastapi"],
   "external_services": ["postgres", "github"],
-  "candidate_mcps": ["postgres", "github"],
+  "candidate_mcps": ["postgres", "github", "brain-mcp", "graphify"],
+  "continuity": {
+    "brain_mcp_installed": true,
+    "graphify_installed": false,
+    "state_file_present": false,
+    "graph_present": false,
+    "graph_age_days": null
+  },
   "existing_claude": {
     "status": "present",
     "missing": ["rules/python-style.md"],

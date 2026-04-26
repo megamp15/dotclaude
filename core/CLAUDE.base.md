@@ -4,6 +4,47 @@
 Universal instructions that apply in every project. Stack- and
 project-specific sections are appended below this by `dotclaude-init`.
 
+## Continuity (read this first, every session)
+
+This project uses dotclaude's continuity layer. Three files / tools
+collectively guarantee that you can pick up exactly where the last
+session left off — even if that session was on a different agent
+(Claude Code, Cursor, Codex, OpenCode, Gemini CLI, ...).
+
+1. **`.claude/project-state.md`** — the durable, agent-agnostic handoff
+   file. Read it first. Treat its `Phase`, `Current focus`, and `Next
+   steps` as authoritative until the user says otherwise. The conductor
+   SessionStart hook also injects it, so you'll see it in the session
+   context — but if you're reading this in an agent without that hook,
+   open the file directly.
+
+2. **`brain-mcp`** (if wired) — cross-agent persistent memory. Indexes
+   conversations from every AI tool the user runs locally. Before asking
+   the user what to do on a cold start, call:
+   - `brain.context_recovery(domain=<this project's name>)`
+   - `brain.open_threads()`
+
+   If `brain-mcp` is not in your MCP list, skip silently — don't error
+   out, don't apologize, don't pretend to use it. The conductor brief
+   will tell you whether it's available.
+
+3. **`graphify-out/GRAPH_REPORT.md`** (if present) — structural map of
+   the codebase: god nodes, communities, surprising cross-domain edges.
+   Skim this before any non-trivial structural change. If it's stale
+   (>14 days) or absent and the change is large, run `graphify ./` first.
+
+**The session-end discipline.** When meaningful work happens (a decision
+made, a feature shipped, a refactor landed, a new question opened),
+update `.claude/project-state.md`. Keep it short — one screen. The next
+agent on any platform reads this file. See
+`.claude/skills/project-conductor/SKILL.md` for the schema and
+`.claude/skills/project-conductor/references/project-state-template.md`
+for the canonical template.
+
+**Don't conflate the three.** project-state.md holds *intent*. brain-mcp
+holds *conversation*. graphify holds *structure*. Three artifacts, three
+concerns, one re-entry brief.
+
 ## Working principles
 
 - **Scope discipline.** Do what was asked, nothing more. If you spot a

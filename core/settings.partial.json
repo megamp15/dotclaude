@@ -81,6 +81,10 @@
           {
             "type": "command",
             "command": ".claude/hooks/context-recovery.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/conductor-brief.sh"
           }
         ]
       }
