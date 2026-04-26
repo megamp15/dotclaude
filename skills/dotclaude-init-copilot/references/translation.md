@@ -156,11 +156,11 @@ applyTo: "**/*.py,**/pyproject.toml,**/requirements*.txt"
 
 ## Testing (Python)
 
-<relevant extracts from stacks/python/skills/pytest-debug.md — tight bullets>
+<relevant extracts from stacks/python/skills/python-pro/references/testing.md "Debugging a failing test" — tight bullets>
 
 ## Deps
 
-<from stacks/python/skills/uv-deps.md — brief>
+<from stacks/python/skills/python-pro/references/packaging.md "Common uv workflows" — brief>
 ```
 
 `applyTo` globs per stack:

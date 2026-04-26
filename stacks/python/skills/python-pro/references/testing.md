@@ -189,3 +189,20 @@ Signals:
 
 Fix: write more tests at the *public API* level and fewer at the unit level.
 Classical / Chicago-school > mockist / London-school for most codebases.
+
+## Debugging a failing test
+
+Tight loop, in this order:
+
+1. Run just the failing test with full traceback:
+   `uv run pytest path/to/test.py::test_name -xvs --tb=long`
+2. If it passes in isolation but fails in the suite, suspect shared state
+   (fixtures with `session`/`module` scope, env vars, tmpdir reuse). Isolate
+   by progressively narrowing the run set.
+3. Drop `breakpoint()` into the failing line and re-run with `-s` to land in
+   pdb. From there: `where`, `args`, `pp <expr>`.
+4. For flaky tests, run with `--count=20` (`pytest-repeat`) to reproduce
+   reliably before attempting a fix. A flake you can't reproduce is a flake
+   you can't fix.
+5. Before declaring it fixed, run the full suite once: `uv run pytest`.
+   Don't trust an isolated pass — fixes often break neighbors.

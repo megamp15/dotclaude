@@ -99,8 +99,9 @@ dotclaude/
 │   │   ├── CLAUDE.stack.md
 │   │   ├── settings.partial.json
 │   │   ├── rules/                       # python-style, async-patterns (MagicStack-flavored)
-│   │   ├── skills/                      # pytest-debug, uv-deps,
-│   │   │                                # python-pro (Jeffallan-adapted deep-dive)
+│   │   ├── skills/                      # python-pro (Jeffallan-adapted deep-dive;
+│   │   │                                # absorbs former pytest-debug + uv-deps
+│   │   │                                # into testing/packaging references)
 │   │   ├── agents/                      # python-reviewer
 │   │   ├── hooks/                       # ruff-format
 │   │   └── mcp/                         # postgres, sqlite (opt-in)
@@ -108,7 +109,7 @@ dotclaude/
 │   │   ├── CLAUDE.stack.md
 │   │   ├── settings.partial.json
 │   │   ├── rules/                       # ts-style
-│   │   ├── skills/                      # vitest-debug,
+│   │   ├── skills/                      # vitest-debug (Vitest/Jest debug loop),
 │   │   │                                # typescript-pro (Jeffallan-adapted deep-dive)
 │   │   ├── agents/                      # ts-reviewer
 │   │   └── hooks/                       # format-prettier
@@ -126,7 +127,7 @@ dotclaude/
 │   │   ├── CLAUDE.stack.md
 │   │   ├── settings.partial.json
 │   │   ├── rules/                       # state-safety
-│   │   ├── skills/                      # tf-plan-review,
+│   │   ├── skills/                      # tf-plan-review (review-time plan reader),
 │   │   │                                # terraform-engineer (Jeffallan-adapted)
 │   │   └── hooks/                       # block-destroy-apply
 │   │
