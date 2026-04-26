@@ -19,9 +19,9 @@ first-time "how do I write HCL" questions.
 >
 > - `stacks/terraform/CLAUDE.stack.md` — baseline conventions
 > - `stacks/terraform/rules/state-safety.md` — enforceable rules
-> - `core/skills/cloud-architect/` — when the question is really "what should
+> - `core/skills/architect/` — when the question is really "what should
 >   this topology be"
-> - `core/skills/architecture-designer/` — when making architectural decisions
+> - `core/skills/architect/` — when making architectural decisions
 >   about modules vs. monolith infra
 
 ## When to use this skill

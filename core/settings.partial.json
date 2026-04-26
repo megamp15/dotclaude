@@ -1,5 +1,8 @@
 {
   "_comment": "source: core — universal permissions + hook registration. Deep-merged with stack settings.partial.json by dotclaude-init. The allow/deny philosophy mirrors Claude Code's auto-mode (https://www.anthropic.com/engineering/claude-code-auto-mode): broad allow for things that can't modify state OR are scoped to a known-safe tool; targeted deny for the destruction/exfiltration/escalation patterns that are dangerous regardless of context. The block-dangerous-commands.sh hook is the runtime safety net for everything the static rules can't catch.",
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "permissions": {
     "_allow_groups": [
       "read-only inspection (pwd, ls, cat, tree, file, stat, du, df, env)",
@@ -271,6 +274,26 @@
           {
             "type": "command",
             "command": ".claude/hooks/notify.sh"
+          }
+        ]
+      }
+    ],
+    "TeammateIdle": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/agent-team-idle.sh"
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/agent-team-task-completed.sh"
           }
         ]
       }

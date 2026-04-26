@@ -1,6 +1,6 @@
 ---
 name: sre-engineer
-description: Site reliability engineering — SLIs/SLOs/error budgets, incident command, blameless postmortems, capacity planning, on-call hygiene, toil elimination, and the production readiness checklist. Distinct from `monitoring-expert` (which is the telemetry plumbing), `debug-fix` (which is tactical), and `chaos-engineer` (which is one tool in the SRE belt).
+description: Site reliability engineering — SLIs/SLOs/error budgets, incident command, blameless postmortems, capacity planning, on-call hygiene, toil elimination, and the production readiness checklist. Distinct from `monitoring-expert` (which is the telemetry plumbing), `debugging` tactical mode, and `chaos-engineer` (which is one tool in the SRE belt).
 source: core
 triggers: /sre, reliability, SLI, SLO, error budget, incident response, on-call, runbook, postmortem, production readiness, capacity planning, toil, change management, release engineering
 ported-from: https://github.com/Jeffallan/claude-skills/tree/main/skills/sre-engineer
@@ -18,7 +18,7 @@ on-call — not "how do I fix this one bug".
 > **See also:**
 >
 > - `core/skills/monitoring-expert/` — metrics / logs / traces plumbing
-> - `core/skills/debug-fix/` — tactical "something is broken right now"
+> - `core/skills/debugging/` — tactical "something is broken right now"
 > - `core/skills/chaos-engineer/` — fault injection as one tool
 > - `core/skills/homelab-infra/` — physical layer reliability
 > - `core/rules/observability.md` — baseline conventions

@@ -19,7 +19,7 @@ metric design, trace context, log shape, dashboards, or alert queries.
 >
 > - `core/rules/observability.md` — baseline conventions
 > - `core/skills/sre-engineer/` — SLOs, incidents, policy
-> - `core/skills/debug-fix/` — tactical debugging using observability
+> - `core/skills/debugging/` — tactical debugging using observability
 > - `stacks/kubernetes/skills/kubernetes-specialist/` — K8s-native
 >   observability (Prom operator, OTel collector deployment)
 

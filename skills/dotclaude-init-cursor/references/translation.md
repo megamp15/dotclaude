@@ -204,7 +204,7 @@ When you want a specialized review, invoke one of these by name:
 ## Available workflows (intent-triggered or manual)
 
 - `@pr-review` — multi-agent PR review
-- `@debug-fix` — methodical bug hunt
+- `@debugging` — methodical bug hunt or advanced debugging escalation
 - `@hotfix` — emergency production-change flow
 - ...
 

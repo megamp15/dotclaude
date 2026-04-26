@@ -226,7 +226,7 @@ Invoke with OpenCode's subagent syntax (e.g., `@code-reviewer` in chat):
 Invoke with slash (e.g., `/pr-review`):
 
 - `/pr-review` — multi-agent PR review
-- `/debug-fix` — methodical bug hunt
+- `/debugging` — methodical bug hunt or advanced debugging escalation
 - ...
 
 ---
@@ -257,7 +257,7 @@ Recommendation — split by hook:
 | `session-start.sh` | `AGENTS.md` prose + OpenCode's built-in context. Skip the hook. |
 | `notify.sh` | OpenCode's own notification. Skip. |
 | `format-on-save.sh` | OpenCode's `formatter` config if present, or editor integration. Skip the hook. |
-| `auto-test.sh` | Skip — prefer `/tdd` command to drive this. |
+| `auto-test.sh` | Skip — prefer `/testing` in tdd mode to drive this. |
 | `context-recovery.sh` | Skip — OpenCode handles its own context management. |
 
 So most hooks are absorbed into `permission` + `AGENTS.md`, not rendered.

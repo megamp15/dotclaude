@@ -1,0 +1,26 @@
+{
+  "_comment": "source: stacks/cloudflare-workers - Cloudflare Workers tooling allowlist. Deep-merged with core settings by dotclaude-init.",
+  "permissions": {
+    "allow": [
+      "Bash(wrangler --version)",
+      "Bash(wrangler dev:*)",
+      "Bash(wrangler types:*)",
+      "Bash(wrangler secret list:*)",
+      "Bash(wrangler kv namespace list:*)",
+      "Bash(wrangler d1 list:*)",
+      "Bash(wrangler pages dev:*)",
+      "Bash(vitest:*)",
+      "Bash(npm:*)",
+      "Bash(pnpm:*)"
+    ],
+    "deny": [
+      "Bash(wrangler deploy:*)",
+      "Bash(wrangler publish:*)",
+      "Bash(wrangler secret put:*)",
+      "Bash(wrangler secret delete:*)",
+      "Bash(wrangler kv key delete:*)",
+      "Bash(wrangler d1 execute:* --remote:*)"
+    ]
+  }
+}
+

@@ -1,0 +1,22 @@
+{
+  "_comment": "source: stacks/svelte - Svelte/SvelteKit tooling allowlist. Deep-merged with core settings by dotclaude-init.",
+  "permissions": {
+    "allow": [
+      "Bash(npm:*)",
+      "Bash(pnpm:*)",
+      "Bash(yarn:*)",
+      "Bash(bun:*)",
+      "Bash(vite:*)",
+      "Bash(svelte-check:*)",
+      "Bash(vitest:*)",
+      "Bash(playwright:*)"
+    ],
+    "deny": [
+      "Bash(npm publish:*)",
+      "Bash(pnpm publish:*)",
+      "Bash(yarn publish:*)",
+      "Bash(bun publish:*)"
+    ]
+  }
+}
+

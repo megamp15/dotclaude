@@ -1,0 +1,20 @@
+{
+  "_comment": "source: stacks/tauri - Tauri desktop app tooling allowlist. Deep-merged with core settings by dotclaude-init.",
+  "permissions": {
+    "allow": [
+      "Bash(cargo tauri:*)",
+      "Bash(npm run tauri:*)",
+      "Bash(pnpm tauri:*)",
+      "Bash(yarn tauri:*)",
+      "Bash(cargo check:*)",
+      "Bash(cargo test:*)",
+      "Bash(cargo fmt:*)",
+      "Bash(cargo clippy:*)"
+    ],
+    "deny": [
+      "Bash(cargo tauri signer:*)",
+      "Bash(cargo tauri build:* --bundles:*)"
+    ]
+  }
+}
+

@@ -29,7 +29,7 @@ testing, and migrations.
 **Not for:**
 - Baseline lint-style rules — see `fastapi-patterns.md`.
 - API-design decisions (resources, versioning, error envelope) —
-  `core/skills/api-designer`.
+  `core/skills/architect` rest-api mode.
 - Full-stack feature implementation — `core/skills/fullstack-guardian`.
 
 ## Core workflow
@@ -392,5 +392,5 @@ Migration recipe:
 
 - Baseline FastAPI rules → `stacks/fastapi/rules/fastapi-patterns.md`
 - Python rules → `stacks/python/`
-- API-design decisions → `core/skills/api-designer`
+- API-design decisions → `core/skills/architect` rest-api mode
 - Full-stack flow → `core/skills/fullstack-guardian`

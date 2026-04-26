@@ -35,9 +35,9 @@ my-project/
     │   └── ts-reviewer.md               # (if stacks/node-ts is active)
     ├── command/
     │   ├── pr-review.md
-    │   ├── debug-fix.md
+    │   ├── debugging.md
     │   ├── ship.md
-    │   ├── tdd.md
+    │   ├── testing.md
     │   ├── refactor.md
     │   ├── commit.md
     │   ├── security.md

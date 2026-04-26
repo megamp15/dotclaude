@@ -44,7 +44,7 @@ updating at the end of substantive work.
 > - `core/skills/spec-miner/` — reverse-engineer specs from code
 > - `core/skills/legacy-modernizer/` — evolve untrusted code
 > - `core/skills/ship/` — daily shipping discipline
-> - `core/skills/pr-review/`, `core/skills/refactor/`, `core/skills/debug-fix/`
+> - `core/skills/pr-review/`, `core/skills/refactor/`, `core/skills/debugging/`
 
 ## When to use
 
@@ -118,10 +118,10 @@ skill drives. The conductor doesn't do the work — it picks who does.
 
 | Phase | Default driver | Common companions |
 |---|---|---|
-| **greenfield** | `feature-forge` | `architecture-designer`, `api-designer` |
-| **building** | `ship` (with `tdd` if test-first) | `pr-review`, `commit`, `refactor` |
-| **established** | task-dependent: `ship` / `pr-review` / `refactor` / `debug-fix` | domain skill (`postgres-pro`, `react-expert`, …) |
-| **maintenance** | `legacy-modernizer` | `spec-miner`, `test-master`, `debug-fix` |
+| **greenfield** | `feature-forge` | `architect` |
+| **building** | `ship` (with `testing` tdd mode if test-first) | `pr-review`, `commit`, `refactor` |
+| **established** | task-dependent: `ship` / `pr-review` / `refactor` / `debugging` | domain skill (`postgres-pro`, `react-expert`, …) |
+| **maintenance** | `legacy-modernizer` | `spec-miner`, `testing`, `debugging` |
 | **migration** | `legacy-modernizer` | `chaos-engineer`, `pr-review`, domain skill |
 
 If the user has stated an explicit task, route directly to the task's skill

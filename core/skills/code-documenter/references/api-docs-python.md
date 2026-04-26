@@ -116,7 +116,7 @@ npx @redocly/cli lint openapi.json
 - Every route declares error responses it emits.
 - Group routes with `tags`.
 - Use Pydantic `Field(..., description=..., examples=[...])` on public fields.
-- Pin `version` and bump it on breaking changes (see `api-designer`).
+- Pin `version` and bump it on breaking changes (see `architect` rest-api mode).
 
 ## Django (DRF + drf-spectacular)
 

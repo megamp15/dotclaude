@@ -8,7 +8,7 @@ source: stacks/docker
 
 Use when: a container doesn't start, keeps restarting, or behaves
 differently than expected. This is the "tight loop" debug skill;
-follow `core/skills/debug-fix` for root-cause discipline.
+follow `core/skills/debugging` for root-cause discipline.
 
 ## Step 0 — get the facts
 

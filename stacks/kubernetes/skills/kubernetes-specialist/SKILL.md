@@ -21,7 +21,7 @@ shape, reliability, networking, or debugging — beyond basic `kubectl apply`.
 >   questions
 > - `core/skills/sre-engineer/` — reliability engineering at the
 >   platform level
-> - `core/skills/cloud-architect/` — when the question is really about
+> - `core/skills/architect/` — when the question is really about
 >   the managed control plane (EKS/GKE/AKS) or networking outside
 >   cluster
 

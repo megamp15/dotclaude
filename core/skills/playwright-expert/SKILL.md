@@ -1,6 +1,6 @@
 ---
 name: playwright-expert
-description: End-to-end browser testing with Playwright — locator strategy (accessible roles, not CSS), auto-waiting, fixtures and projects, trace viewer, network interception, visual regression, CI sharding, and the anti-flaky playbook. Complements `core/skills/test-master` (strategy) and `core/rules/accessibility.md`.
+description: End-to-end browser testing with Playwright — locator strategy (accessible roles, not CSS), auto-waiting, fixtures and projects, trace viewer, network interception, visual regression, CI sharding, and the anti-flaky playbook. Complements `core/skills/testing` strategy mode and `core/rules/accessibility.md`.
 source: core
 triggers: /playwright, e2e, end-to-end testing, browser automation, playwright test, locator, getByRole, page.evaluate, trace viewer, fixture, video recording, visual regression, Percy, Chromatic, webkit, firefox, headless browser, BrowserContext
 ported-from: https://github.com/Jeffallan/claude-skills/tree/main/skills/playwright-expert
@@ -18,7 +18,7 @@ trace debugging, network interception, or CI architecture for e2e.
 
 > **See also:**
 >
-> - `core/skills/test-master/` — testing strategy and what belongs in
+> - `core/skills/testing/` — testing strategy and what belongs in
 >   e2e vs. integration
 > - `core/rules/accessibility.md` — role selectors mean your app must
 >   have proper semantics

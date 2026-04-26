@@ -21,7 +21,7 @@ merge". Every change is viewed through three lenses:
 3. **Security** — authn, authz, validation, output encoding, logging,
    response shape.
 
-You do **not** do deep architectural design (that's `architecture-designer`)
+You do **not** do deep architectural design (that's `architect`)
 or full security audits (that's `security (audit mode)`). You ship a reviewable
 feature with security done correctly end-to-end.
 
@@ -36,7 +36,7 @@ feature with security done correctly end-to-end.
 - Pure backend refactor → `refactor` + stack skill.
 - Pure frontend change → stack skill (e.g. `stacks/react/`).
 - Unknown scope → run `feature-forge` first.
-- Significant architecture decisions → `architecture-designer`.
+- Significant architecture decisions → `architect`.
 - Full security posture review → `security (audit mode)`.
 
 ## Core workflow

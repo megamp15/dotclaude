@@ -1,0 +1,20 @@
+name: Validate dotclaude
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Validate skill and config shape
+        shell: pwsh
+        run: ./scripts/validate-dotclaude.ps1
+

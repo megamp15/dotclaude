@@ -30,7 +30,7 @@ Two hats:
 **Not for:**
 - Greenfield features → `feature-forge`
 - Writing inline docs / OpenAPI → `code-documenter`
-- System-level design decisions → `architecture-designer`
+- System-level design decisions → `architect`
 
 ## Core workflow
 

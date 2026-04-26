@@ -1,0 +1,25 @@
+{
+  "_comment": "source: stacks/go - Go tooling allowlist. Deep-merged with core settings by dotclaude-init.",
+  "permissions": {
+    "allow": [
+      "Bash(go version)",
+      "Bash(go env:*)",
+      "Bash(go test:*)",
+      "Bash(go vet:*)",
+      "Bash(go fmt:*)",
+      "Bash(gofmt:*)",
+      "Bash(go mod tidy:*)",
+      "Bash(go mod download:*)",
+      "Bash(go list:*)",
+      "Bash(golangci-lint run:*)",
+      "Bash(staticcheck:*)"
+    ],
+    "deny": [
+      "Bash(go env -w:*)",
+      "Bash(go clean -modcache:*)",
+      "Bash(go install:*@latest)",
+      "Bash(goreleaser release:*)"
+    ]
+  }
+}
+

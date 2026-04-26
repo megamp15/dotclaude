@@ -17,8 +17,8 @@ to change code you don't fully trust, without a rewrite.
 > **See also:**
 >
 > - `core/skills/refactor/` — smaller-scale refactors
-> - `core/skills/test-master/` — characterization tests, mutation
-> - `core/skills/debug-fix/` — when legacy bites back
+> - `core/skills/testing/` — characterization tests, mutation
+> - `core/skills/debugging/` — when legacy bites back
 > - `core/skills/the-fool/` — sanity-check assumptions
 
 ## When to use this skill

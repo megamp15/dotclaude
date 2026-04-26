@@ -400,4 +400,4 @@ form.value; // { email: string; password: string }
 
 - Baseline Angular rules → `stacks/angular/CLAUDE.stack.md`
 - Full-stack feature flow → `core/skills/fullstack-guardian`
-- API design for the backend → `core/skills/api-designer`
+- API design for the backend → `core/skills/architect` rest-api mode

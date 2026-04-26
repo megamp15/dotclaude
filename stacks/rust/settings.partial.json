@@ -1,0 +1,25 @@
+{
+  "_comment": "source: stacks/rust - Rust tooling allowlist. Deep-merged with core settings by dotclaude-init.",
+  "permissions": {
+    "allow": [
+      "Bash(rustc --version)",
+      "Bash(cargo --version)",
+      "Bash(cargo check:*)",
+      "Bash(cargo test:*)",
+      "Bash(cargo fmt:*)",
+      "Bash(cargo clippy:*)",
+      "Bash(cargo build:*)",
+      "Bash(cargo tree:*)",
+      "Bash(cargo update:*)",
+      "Bash(rustfmt:*)"
+    ],
+    "deny": [
+      "Bash(cargo publish:*)",
+      "Bash(cargo login:*)",
+      "Bash(cargo owner:*)",
+      "Bash(cargo yank:*)",
+      "Bash(cargo install:* --git:*)"
+    ]
+  }
+}
+

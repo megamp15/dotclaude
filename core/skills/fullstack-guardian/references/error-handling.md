@@ -84,7 +84,7 @@ Never let a raw driver exception or stack trace reach the client.
 }
 ```
 
-Per RFC 7807 (`application/problem+json`). See `api-designer` for the full
+Per RFC 7807 (`application/problem+json`). See `architect` rest-api mode for the full
 error spec.
 
 ## Frontend layering

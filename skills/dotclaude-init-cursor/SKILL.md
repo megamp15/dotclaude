@@ -28,7 +28,7 @@ my-project/
 │   │   ├── 10-security.mdc              # alwaysApply: true
 │   │   ├── 20-python-style.mdc          # globs: ["**/*.py"]  (from stacks/python)
 │   │   ├── 30-pr-review.mdc             # alwaysApply: false, description-triggered  (from skills/)
-│   │   ├── 30-debug-fix.mdc             # alwaysApply: false, description-triggered
+│   │   ├── 30-debugging.mdc             # alwaysApply: false, description-triggered
 │   │   └── 40-code-reviewer.mdc         # alwaysApply: false, manual  (from agents/)
 │   └── mcp.json                         # rendered from core + stack MCP configs
 └── AGENTS.md                             # universal project context (Cursor reads this too)

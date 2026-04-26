@@ -28,11 +28,11 @@ codebase is mostly README, scaffolding, and `hello world`.
   greenfield — it's already in *building* with bad structure.
 - An empty repo with a 2-page `SPEC.md` is greenfield. The spec is the seed.
 
-**Default driver.** `feature-forge` if no spec exists. `architecture-designer`
-if the spec is written but the system shape isn't. `tdd` if specs and
+**Default driver.** `feature-forge` if no spec exists. `architect`
+if the spec is written but the system shape isn't. `testing` tdd mode if specs and
 shape exist and the user wants to start writing.
 
-**Common companions.** `api-designer`, `architecture-designer`,
+**Common companions.** `architect`,
 `fullstack-guardian`.
 
 **Conductor handoff line.**
@@ -63,11 +63,11 @@ no production tag yet — or the first one is days away.
 - A repo with one big "initial commit" of 50 files and then nothing for
   months is *greenfield-stalled*, not building.
 
-**Default driver.** `ship` for "let's get this shipped today" tasks. `tdd`
+**Default driver.** `ship` for "let's get this shipped today" tasks. `testing` tdd mode
 when the user is writing tests first. `feature-forge` if a *new* feature
 needs scoping inside the building project.
 
-**Common companions.** `pr-review`, `commit`, `refactor`, `debug-fix`,
+**Common companions.** `pr-review`, `commit`, `refactor`, `debugging`,
 plus the relevant domain skill (`react-expert`, `postgres-pro`, etc.).
 
 **Conductor handoff line.**
@@ -102,11 +102,11 @@ commits, healthy CI. Architecture is stable; people use this thing.
 **Default driver.** Task-dependent. The conductor offers a routing menu:
 
 - "Add a feature" → `feature-forge`, then `ship`.
-- "Fix a bug" → `debug-fix`.
+- "Fix a bug" → `debugging`.
 - "Refactor X" → `refactor` (or `legacy-modernizer` if the area is fragile).
 - "Review this PR" → `pr-review`.
-- "Add tests for X" → `test-master`.
-- "Investigate prod issue" → `debugging-wizard` + `sre-engineer`.
+- "Add tests for X" → `testing`.
+- "Investigate prod issue" → `debugging` advanced mode + `sre-engineer`.
 
 **Common companions.** Domain skill always (`react-expert`, `postgres-pro`,
 `kubernetes-specialist`, …). `pr-review` is the default for any change
@@ -146,8 +146,8 @@ bumps, security patches, the occasional small feature.
 characterization tests and seams; don't let the user "just patch it".
 
 **Common companions.** `spec-miner` (recover the original intent),
-`test-master` (build characterization tests before changing anything),
-`debug-fix` (when reality bites), `the-fool` (sanity-check assumptions
+`testing` (build characterization tests before changing anything),
+`debugging` (when reality bites), `the-fool` (sanity-check assumptions
 that may have rotted).
 
 **Conductor handoff line.**

@@ -1,6 +1,6 @@
 ---
 name: sql-pro
-description: Engine-agnostic SQL craft — set-based thinking, joins, window functions, CTEs (recursive and otherwise), aggregates, pivots, dedup, gaps-and-islands, NULL semantics, and portable style. Distinct from `postgres-pro` (engine-specific) and `api-designer` (contracts, not queries).
+description: Engine-agnostic SQL craft — set-based thinking, joins, window functions, CTEs (recursive and otherwise), aggregates, pivots, dedup, gaps-and-islands, NULL semantics, and portable style. Distinct from `postgres-pro` (engine-specific) and `architect` rest-api mode (contracts, not queries).
 source: core
 triggers: /sql-pro, SQL query, window function, CTE, WITH RECURSIVE, LATERAL JOIN, gaps and islands, NULL semantics, pivot / unpivot, correlated subquery, ROWS BETWEEN, rank vs row_number, SQL performance
 ported-from: https://github.com/Jeffallan/claude-skills/tree/main/skills/sql-pro
@@ -22,7 +22,7 @@ Postgres, MySQL, SQL Server, or Snowflake.
 > - `core/rules/database.md` — cross-project DB conventions
 > - `stacks/fastapi/skills/fastapi-expert/references/async-sqlalchemy.md` —
 >   SQLAlchemy query patterns
-> - `core/skills/architecture-designer/` — when the question is really
+> - `core/skills/architect/` — when the question is really
 >   "should this be a query or an app computation"
 
 ## When to use this skill

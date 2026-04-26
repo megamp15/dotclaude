@@ -11,7 +11,7 @@ core/
 ├── CLAUDE.base.md         # universal CLAUDE.md content — tone, principles, guardrails
 ├── settings.partial.json  # universal permissions + hooks registration
 ├── rules/                 # universal coding + process rules
-├── skills/                # universal slash commands (pr-review, ship, tdd, etc.)
+├── skills/                # universal workflows (pr-review, ship, testing, debugging, etc.)
 ├── agents/                # universal specialist reviewers
 ├── hooks/                 # universal guardrail scripts (dangerous-commands, secrets, etc.)
 └── mcp/                   # always-on + opt-in MCP servers

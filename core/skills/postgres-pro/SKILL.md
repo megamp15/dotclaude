@@ -20,7 +20,7 @@ query plans, locking, and operational realities.
 > - `core/skills/sql-pro/` — engine-agnostic SQL craft (joins, CTEs, window
 >   functions, normalization)
 > - `core/rules/database.md` — cross-project DB conventions
-> - `core/skills/api-designer/` — when the question is really "what's the
+> - `core/skills/architect/` — when the question is really "what's the
 >   API contract"
 > - `stacks/fastapi/skills/fastapi-expert/references/async-sqlalchemy.md` —
 >   Postgres via async SQLAlchemy

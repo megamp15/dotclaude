@@ -24,9 +24,9 @@ checklist the next agent (or human) can execute against.
 - Feature that touches security, compliance, or cross-team boundaries
 
 **Not for:**
-- Bug fixes → `debug-fix`
+- Bug fixes → `debugging`
 - Reverse-engineering existing code → `spec-miner`
-- System-level design → `architecture-designer`
+- System-level design → `architect`
 - Implementation — you produce the spec, not the code
 
 ## Workflow
@@ -39,7 +39,7 @@ decisions, not exploration:
 - Scan the repo for related existing patterns (auth, validation, similar
   features).
 - Note the stacks in use (from `AGENTS.md` / `CLAUDE.md`).
-- If high-stakes: delegate to `architecture-designer` or `security`
+- If high-stakes: delegate to `architect` or `security`
   (audit mode) for a pre-read.
 
 ### 2. Interview (PM hat → Dev hat → Validation)
