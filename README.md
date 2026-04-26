@@ -63,6 +63,9 @@ dotclaude/
 │   │                                    # + project-conductor (lifecycle-aware orchestrator:
 │   │                                    #   detects phase, routes to driver skill,
 │   │                                    #   maintains agent-agnostic .claude/project-state.md)
+│   │                                    # + learnings-log (Ralph-style append-only memory:
+│   │                                    #   .claude/learnings.md, zero-dep cross-session
+│   │                                    #   memory baseline; composes with brain-mcp)
 │   ├── conventions/                     # cross-cutting conventions (non-rule docs):
 │   │                                    #   ported-skills.md (provenance for skills
 │   │                                    #                     adapted from external sources)
@@ -541,27 +544,35 @@ every cold start begins with a re-entry brief, automatically.
 
 | Layer | Where | What it does |
 |---|---|---|
-| **`conductor-brief.sh`** SessionStart hook | `core/hooks/` (registered in `core/settings.partial.json`) | Auto-runs at every session start. Prints `.claude/project-state.md`, brain-mcp / graphify availability, and a phase hint *before* the user types anything. |
-| **`CLAUDE.md` Continuity section** | `core/CLAUDE.base.md` (top-level section) | Instructs every agent — Claude Code, Cursor, Codex, OpenCode, Gemini CLI — to read `project-state.md` first and call brain-mcp on cold start. The cross-agent guarantee for tools that don't support hooks. |
+| **`conductor-brief.sh`** SessionStart hook | `core/hooks/` (registered in `core/settings.partial.json`) | Auto-runs at every session start. Prints `.claude/project-state.md`, the top 3 entries of `.claude/learnings.md`, brain-mcp / graphify availability, and a phase hint *before* the user types anything. |
+| **`CLAUDE.md` Continuity section** | `core/CLAUDE.base.md` (top-level section) | Instructs every agent — Claude Code, Cursor, Codex, OpenCode, Gemini CLI — to read `project-state.md` and `learnings.md` first and call brain-mcp on cold start. The cross-agent guarantee for tools that don't support hooks. |
 | **`/dotclaude-resume` command** + `scripts/dotclaude-resume.sh` | `commands/`, `scripts/` | Manual invocation: prints the brief on demand. Useful for agents without SessionStart hooks, after `/clear`, or when pasting context into a different agent. |
 | **`project-conductor` skill** | `core/skills/project-conductor/` | Drives when the user explicitly asks "where are we", when phase ambiguity needs a real conversation, and when state needs updating at the end of substantive work. |
-| **brain-mcp** (default ON in init) | `core/mcp/optional/brain-mcp.mcp.json` + `core/mcp/skills/brain-mcp/SKILL.md` | Cross-agent persistent memory ([brain-mcp](https://github.com/mordechaipotash/brain-mcp), MIT, 100% local). 25 MCP tools. Recommended global install: `pipx install brain-mcp && brain-mcp setup`. |
-| **graphify** (default ON for non-trivial repos) | `core/mcp/optional/graphify.mcp.json` + `core/mcp/skills/graphify/SKILL.md` | Multi-modal codebase knowledge graph ([graphify](https://github.com/safishamsi/graphify), MIT, local-first). Tree-sitter + Leiden clustering. Install: `pip install graphifyy && graphify install`. |
+| **`learnings-log` skill** + **`/dotclaude-learn`** command | `core/skills/learnings-log/`, `commands/dotclaude-learn.md` | Append-only project memory at `.claude/learnings.md`. Captures gotchas, hidden couplings, "looks wrong but is intentional" notes. Zero-dep — works without any MCP installed. The Ralph-style baseline that carries cross-session memory when brain-mcp isn't wired. |
+| **brain-mcp** (default ON in init, opt-in install) | `core/mcp/optional/brain-mcp.mcp.json` + `core/mcp/skills/brain-mcp/SKILL.md` | Cross-agent persistent memory ([brain-mcp](https://github.com/mordechaipotash/brain-mcp), MIT, 100% local). 25 MCP tools. Recommended global install: `pipx install brain-mcp && brain-mcp setup`. |
+| **graphify** (default ON for non-trivial repos, opt-in install) | `core/mcp/optional/graphify.mcp.json` + `core/mcp/skills/graphify/SKILL.md` | Multi-modal codebase knowledge graph ([graphify](https://github.com/safishamsi/graphify), MIT, local-first). Tree-sitter + Leiden clustering. Install: `pip install graphifyy && graphify install`. |
 
 ### The composition
 
-- `brain-mcp` keeps the **conversational** context (what was said, decided, doubted across every AI tool you use).
-- `graphify` keeps the **structural** context (what calls what, what's load-bearing, what's surprising).
-- `.claude/project-state.md` keeps the **intent** context (what phase, what's next, what not to lose) — agent-agnostic Markdown, lives in git.
+Four artifacts, four concerns, one re-entry brief:
+
+- `.claude/project-state.md` keeps the **current intent** (what phase, what's next, what not to lose) — agent-agnostic Markdown, snapshot, lives in git.
+- `.claude/learnings.md` keeps the **accumulated discovery** (gotchas, dead ends, hidden couplings) — append-only, zero-dep, the Ralph-style baseline.
+- `brain-mcp` keeps the **full conversational** context (everything said, decided, doubted across every AI tool) — semantic search, optional install.
+- `graphify` keeps the **structural** context (what calls what, what's load-bearing, what's surprising) — Tree-sitter graph, optional install.
+
+The two file-based artifacts work with zero installs. The two MCPs add
+semantic search and structural depth on top. Graceful degradation in
+both directions.
 
 ### The cold-start loop
 
 1. You open a project in any agent.
-2. `conductor-brief.sh` fires (or, on agents without SessionStart hooks, the agent reads the Continuity section in `CLAUDE.md` and runs the equivalent inline). The brief shows the project state, the brain-mcp tools to call, and the phase hint.
-3. The agent calls `brain.context_recovery(domain=<project>)` and `brain.open_threads()` for conversational context.
+2. `conductor-brief.sh` fires (or, on agents without SessionStart hooks, the agent reads the Continuity section in `CLAUDE.md` and runs the equivalent inline). The brief shows the project state, the top 3 learnings entries, brain-mcp / graphify availability, and the phase hint.
+3. If wired, the agent calls `brain.context_recovery(domain=<project>)` and `brain.open_threads()` for conversational context.
 4. If the change is structural, the agent reads `graphify-out/GRAPH_REPORT.md`.
 5. The agent confirms the brief with you in 1-2 sentences and proposes the next concrete action — or just acts if the next step is unambiguous.
-6. At the end of substantive work, the agent updates `.claude/project-state.md`. You commit it. The next agent — possibly on a different platform — starts at step 1 with full context.
+6. At the end of substantive work, the agent updates `.claude/project-state.md` (current state) and appends to `.claude/learnings.md` if anything non-obvious was discovered. You commit both. The next agent — possibly on a different platform — starts at step 1 with full context.
 
 ### Install (global, one-time per machine)
 
@@ -582,10 +593,11 @@ says so and the agent skips the corresponding step. No errors, no nags.
 
 `dotclaude-init` handles this automatically:
 
-- Wires brain-mcp (default ON) and graphify (default ON for non-trivial repos) into `.mcp.json`.
+- Wires brain-mcp (default ON) and graphify (default ON for non-trivial repos) into `.mcp.json`. Each gets a three-way choice: wire only, wire AND install now (with per-tool confirmation), or skip.
 - Copies `conductor-brief.sh` into `.claude/hooks/` and registers it in `.claude/settings.json`.
 - Seeds `.claude/project-state.md` with the detected phase if the file doesn't already exist.
-- If brain-mcp / graphify aren't installed locally, prints the install commands at the end of init.
+- Seeds `.claude/learnings.md` with a minimal header + one example entry if the file doesn't already exist (zero-dep cross-session memory baseline).
+- If brain-mcp / graphify aren't installed locally and the user didn't opt into the install step, prints the install commands at the end of init.
 
 ## References & inspiration
 

@@ -6,7 +6,7 @@ project-specific sections are appended below this by `dotclaude-init`.
 
 ## Continuity (read this first, every session)
 
-This project uses dotclaude's continuity layer. Three files / tools
+This project uses dotclaude's continuity layer. Four artifacts
 collectively guarantee that you can pick up exactly where the last
 session left off — even if that session was on a different agent
 (Claude Code, Cursor, Codex, OpenCode, Gemini CLI, ...).
@@ -18,32 +18,49 @@ session left off — even if that session was on a different agent
    context — but if you're reading this in an agent without that hook,
    open the file directly.
 
-2. **`brain-mcp`** (if wired) — cross-agent persistent memory. Indexes
-   conversations from every AI tool the user runs locally. Before asking
-   the user what to do on a cold start, call:
+2. **`.claude/learnings.md`** — append-only project memory. Non-obvious
+   gotchas, hidden couplings, "looks wrong but is intentional because…"
+   notes. Read at minimum the top 3 entries on cold start (the
+   conductor brief surfaces them automatically). When you discover
+   something the next agent would re-suffer through, append a new
+   entry per the discipline in
+   `.claude/skills/learnings-log/SKILL.md`. This file is the
+   zero-dependency baseline for cross-session memory — it works without
+   any MCP installed.
+
+3. **`brain-mcp`** (if wired) — cross-agent persistent memory. Indexes
+   conversations from every AI tool the user runs locally, including
+   `learnings.md`. Before asking the user what to do on a cold start,
+   call:
    - `brain.context_recovery(domain=<this project's name>)`
    - `brain.open_threads()`
 
    If `brain-mcp` is not in your MCP list, skip silently — don't error
    out, don't apologize, don't pretend to use it. The conductor brief
-   will tell you whether it's available.
+   will tell you whether it's available. The `learnings.md` log is a
+   high-signal substitute when brain-mcp is absent.
 
-3. **`graphify-out/GRAPH_REPORT.md`** (if present) — structural map of
+4. **`graphify-out/GRAPH_REPORT.md`** (if present) — structural map of
    the codebase: god nodes, communities, surprising cross-domain edges.
    Skim this before any non-trivial structural change. If it's stale
    (>14 days) or absent and the change is large, run `graphify ./` first.
 
-**The session-end discipline.** When meaningful work happens (a decision
-made, a feature shipped, a refactor landed, a new question opened),
-update `.claude/project-state.md`. Keep it short — one screen. The next
-agent on any platform reads this file. See
-`.claude/skills/project-conductor/SKILL.md` for the schema and
-`.claude/skills/project-conductor/references/project-state-template.md`
-for the canonical template.
+**The session-end discipline.** When meaningful work happens:
 
-**Don't conflate the three.** project-state.md holds *intent*. brain-mcp
-holds *conversation*. graphify holds *structure*. Three artifacts, three
-concerns, one re-entry brief.
+- A decision made, feature shipped, refactor landed, or new question
+  opened → update `.claude/project-state.md`. Keep it short, one screen.
+- Something non-obvious discovered (gotcha, hidden coupling, dead end,
+  intentional weirdness) → append to `.claude/learnings.md`. One thought
+  per entry, name the file/symbol.
+
+The next agent on any platform reads both files. Schemas live in
+`.claude/skills/project-conductor/SKILL.md` and
+`.claude/skills/learnings-log/SKILL.md`.
+
+**Don't conflate the artifacts.** project-state.md holds *current
+intent*. learnings.md holds *accumulated discovery*. brain-mcp holds
+*full conversation history*. graphify holds *structure*. Four
+artifacts, four concerns, one re-entry brief.
 
 ## Working principles
 

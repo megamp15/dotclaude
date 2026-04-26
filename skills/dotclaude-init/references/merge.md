@@ -115,8 +115,44 @@ all three:
    exists, do **not** overwrite. Print: "kept existing
    `.claude/project-state.md` — let project-conductor refresh it."
 
-State file is **project-owned** — no `source:` frontmatter, never
-touched by `dotclaude-sync`.
+5. **Learnings log seed** — if `.claude/learnings.md` does **not**
+   already exist, init writes a minimal seed:
+
+   ```markdown
+   # Learnings
+
+   Append-only log of non-obvious things discovered while working on
+   this project. Newest entries on top. One thought per entry. See
+   `.claude/skills/learnings-log/SKILL.md` for the full discipline.
+
+   <!--
+   Format:
+   ## YYYY-MM-DD — short topic phrase
+
+   Body (1-3 lines). Name actual files and symbols.
+
+   tags: area, area
+   -->
+
+   ## <today> — adopted dotclaude
+
+   Project initialized with dotclaude. Continuity layer wired:
+   project-state.md (snapshot), learnings.md (this file, accumulated
+   gotchas), and brain-mcp (semantic history, optional). Conductor
+   brief runs on every SessionStart and surfaces the top 3 entries.
+
+   tags: meta, dotclaude
+   ```
+
+   The single seed entry exists so the file is non-empty (the conductor
+   brief has something to print) and doubles as a worked example of
+   what an entry looks like.
+
+   If `.claude/learnings.md` already exists, do **not** overwrite. Print:
+   "kept existing `.claude/learnings.md` — append new learnings to it."
+
+Both state file and learnings log are **project-owned** — no `source:`
+frontmatter, never touched by `dotclaude-sync`.
 
 ## Optional install step (only when user opted in)
 

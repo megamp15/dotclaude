@@ -15,6 +15,7 @@ set -u
 
 REPO_ROOT="${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
 STATE_FILE="$REPO_ROOT/.claude/project-state.md"
+LEARNINGS_FILE="$REPO_ROOT/.claude/learnings.md"
 GRAPH_REPORT="$REPO_ROOT/graphify-out/GRAPH_REPORT.md"
 
 echo "=== conductor brief ==="
@@ -31,7 +32,28 @@ else
   echo "the project-conductor skill will create one at the end of substantive work."
 fi
 
-# 2. brain-mcp availability — global install, indexed cross-agent history.
+# 2. Learnings log — top 3 most recent entries (newest are on top of the file).
+#    Append-only project memory. Zero-dep alternative / supplement to brain-mcp.
+#    See .claude/skills/learnings-log/SKILL.md for the writing discipline.
+if [ -f "$LEARNINGS_FILE" ]; then
+  recent_learnings=$(awk '
+    /^## / {
+      count++
+      if (count > 3) exit
+    }
+    count >= 1 && count <= 3 { print }
+  ' "$LEARNINGS_FILE")
+
+  if [ -n "$recent_learnings" ]; then
+    echo ""
+    echo "--- .claude/learnings.md (3 most recent) ---"
+    echo "$recent_learnings"
+    echo "--- end learnings.md ---"
+    echo "(open the full file for older entries; append a new one when you discover something non-obvious.)"
+  fi
+fi
+
+# 3. brain-mcp availability — global install, indexed cross-agent history.
 if command -v brain-mcp >/dev/null 2>&1; then
   brain_version=$(brain-mcp --version 2>/dev/null | head -n1 || echo "available")
   echo ""
@@ -47,7 +69,7 @@ else
   echo "  see .claude/skills/brain-mcp/SKILL.md for why this is recommended."
 fi
 
-# 3. graphify graph freshness — structural codebase context.
+# 4. graphify graph freshness — structural codebase context.
 if [ -f "$GRAPH_REPORT" ]; then
   if command -v stat >/dev/null 2>&1; then
     if stat -c %Y "$GRAPH_REPORT" >/dev/null 2>&1; then
@@ -69,7 +91,7 @@ elif command -v graphify >/dev/null 2>&1; then
   echo "[graphify available, no graph yet] for structural questions:  graphify ./"
 fi
 
-# 4. Phase hint from cheap git heuristics. Conductor will refine this.
+# 5. Phase hint from cheap git heuristics. Conductor will refine this.
 if git -C "$REPO_ROOT" rev-parse --git-dir >/dev/null 2>&1; then
   commit_count=$(git -C "$REPO_ROOT" rev-list --all --count 2>/dev/null || echo 0)
   tag_count=$(git -C "$REPO_ROOT" tag 2>/dev/null | wc -l | tr -d ' ')
