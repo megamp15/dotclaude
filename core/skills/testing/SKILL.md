@@ -65,14 +65,17 @@ Workflow:
 
 Use for suite architecture and testing craft.
 
-Load references from `../test-master/references/` on demand:
+Strategy-mode references (load on demand):
 
-- `pyramid-and-strategy.md` for level selection and suite shape.
-- `test-doubles.md` for stubs, fakes, mocks, spies, and boundary strategy.
-- `property-and-mutation.md` for Hypothesis, fast-check, mutmut, Stryker,
-  PIT, and invariant testing.
-- `flaky-and-fast.md` for deterministic clocks, shared state, test order,
-  parallelization, and CI speed.
+- [`references/strategy-pyramid.md`](references/strategy-pyramid.md) for
+  level selection and suite shape.
+- [`references/strategy-test-doubles.md`](references/strategy-test-doubles.md)
+  for stubs, fakes, mocks, spies, and boundary strategy.
+- [`references/strategy-property-and-mutation.md`](references/strategy-property-and-mutation.md)
+  for Hypothesis, fast-check, mutmut, Stryker, PIT, and invariant testing.
+- [`references/strategy-flaky-and-fast.md`](references/strategy-flaky-and-fast.md)
+  for deterministic clocks, shared state, test order, parallelization, and
+  CI speed.
 
 Output for strategy reviews:
 

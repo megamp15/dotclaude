@@ -36,11 +36,10 @@ Use the disciplined fix loop:
 7. Run the focused test and relevant suite.
 8. Report what broke, why, what changed, and residual risk.
 
-References from the old tactical skill remain available at
-`../debug-fix/references/`:
+Tactical-mode references (load on demand):
 
-- `bug-archetypes.md`
-- `isolation.md`
+- [`references/tactical-bug-archetypes.md`](references/tactical-bug-archetypes.md)
+- [`references/tactical-isolation.md`](references/tactical-isolation.md)
 
 ## Mode: advanced
 
@@ -56,11 +55,10 @@ Escalation ladder:
 4. System tracing: strace, ltrace, perf, ftrace, eBPF/bpftrace.
 5. Distributed tracing by correlation ID.
 
-References from the old advanced skill remain available at
-`../debugging-wizard/references/`:
+Advanced-mode references (load on demand):
 
-- `process-state.md`
-- `system-tracing.md`
+- [`references/advanced-process-state.md`](references/advanced-process-state.md)
+- [`references/advanced-system-tracing.md`](references/advanced-system-tracing.md)
 
 ## Output format
 

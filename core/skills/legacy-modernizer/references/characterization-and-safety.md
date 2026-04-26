@@ -142,7 +142,7 @@ def test_sort_is_sorted(xs):
 If `legacy_sort` is broken on an edge case, Hypothesis will
 usually find the minimal example.
 
-See `core/skills/testing` strategy mode and `core/skills/test-master/references/property-and-mutation.md`.
+See `core/skills/testing` strategy mode and `core/skills/testing/references/strategy-property-and-mutation.md`.
 
 ## Contract tests at boundaries
 
