@@ -51,15 +51,15 @@ repo because each writes to its own native directory.
 
 ## Add a Stack
 
-1. Create `stacks/<name>/` with `CLAUDE.stack.md`,
+1. Create `stacks/<category>/<name>/` with `CLAUDE.stack.md`,
    `settings.partial.json`, and optional `rules/`, `skills/`, `agents/`,
    `hooks/`, and `mcp/`.
 2. Add detection rules to
    [../skills/dotclaude-init/references/scanning.md](../skills/dotclaude-init/references/scanning.md).
-3. Keep source tags stable as `source: stacks/<name>`.
+3. Keep source tags stable as `source: stacks/<name>` even though the physical
+   folder is categorized.
 4. Run the validator:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate-dotclaude.ps1
 ```
-

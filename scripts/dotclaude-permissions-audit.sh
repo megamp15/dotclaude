@@ -8,7 +8,7 @@
 # Reads:
 #   .claude/settings.json                          (project config)
 #   $DOTCLAUDE_HOME/core/settings.partial.json     (universal defaults)
-#   $DOTCLAUDE_HOME/stacks/<lang>/settings.partial.json (overlays, when detected)
+#   $DOTCLAUDE_HOME/stacks/<category>/<name>/settings.partial.json (overlays, when detected)
 #
 # Exit codes:
 #   0  — no critical findings

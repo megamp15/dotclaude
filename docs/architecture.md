@@ -7,7 +7,7 @@ layouts.
 
 ```text
 core/        universal rules, skills, agents, hooks, MCP defaults
-stacks/      language/framework/infra overlays
+stacks/      categorized language/framework/infra overlays
 skills/      dotclaude framework workflows and renderers
 commands/    slash-command wrappers
 scripts/     backing scripts and validators
@@ -45,7 +45,7 @@ dotclaude source                target repo
 core/CLAUDE.base.md       -->   .claude/CLAUDE.md
 core/settings.partial     -->   .claude/settings.json
 core/rules,skills,hooks   -->   .claude/rules,skills,hooks
-stacks/<name>/*           -->   layered onto the same flat target
+stacks/<category>/<name>/* -->  layered onto the same flat target
 interview answers         -->   project-owned sections/files
 ```
 
@@ -64,6 +64,20 @@ python + docker + kubernetes + terraform + github-actions
 
 Infra stacks should not conflict with language stacks. When they do, the stack
 with the more specific operational boundary should own the rule.
+
+Physical layout is categorized:
+
+```text
+stacks/lang/       python, node-ts, go, rust, dotnet
+stacks/frontend/   react, nextjs, angular, svelte, htmx-alpine, reflex
+stacks/backend/    fastapi
+stacks/infra/      aws, docker, github-actions, kubernetes, terraform, cloudflare-workers
+stacks/ml/         pytorch, vllm-ollama
+stacks/desktop/    tauri
+```
+
+Source tags intentionally stay flat (`source: stacks/python`) so existing
+initialized repos keep syncing across the reorg.
 
 ## Skills vs Commands
 
@@ -84,4 +98,3 @@ the same canonical content into:
 
 Each renderer is explicit about lossy features. Hooks and fine-grained command
 permissions do not translate equally across agents.
-

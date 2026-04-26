@@ -27,8 +27,8 @@ identity, networking, cost, and disaster recovery. Pairs naturally with the
 **Not for:**
 - Generalist system design → `architect` system mode
 - Distributed-systems resilience patterns → `architect` microservices mode
-- Writing Terraform modules → `stacks/aws/` + hands-on coding
-- Day-2 Kubernetes operations → `stacks/kubernetes/`
+- Writing Terraform modules → `stacks/infra/aws/` + hands-on coding
+- Day-2 Kubernetes operations → `stacks/infra/kubernetes/`
 
 ## Core workflow
 
@@ -123,7 +123,7 @@ resource "aws_iam_role_policy" "app_s3" {
 }
 ```
 
-No wildcards in `Action`, no `"*"` in `Resource`, condition keys where they add value. See `stacks/aws/rules/iam-least-privilege.md` for deeper IAM discipline.
+No wildcards in `Action`, no `"*"` in `Resource`, condition keys where they add value. See `stacks/infra/aws/rules/iam-least-privilege.md` for deeper IAM discipline.
 
 ## Cost analysis starter
 

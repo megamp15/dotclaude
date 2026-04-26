@@ -172,8 +172,8 @@ source: core/rules/code-quality.md
 
 Stack rules go to `.opencode/instructions/<stack>-<name>.md`:
 
-- `stacks/python/rules/python-style.md` → `.opencode/instructions/python-style.md`
-- `stacks/docker/rules/dockerfile-best-practices.md` → `.opencode/instructions/docker-dockerfile-best-practices.md`
+- `stacks/lang/python/rules/python-style.md` → `.opencode/instructions/python-style.md`
+- `stacks/infra/docker/rules/dockerfile-best-practices.md` → `.opencode/instructions/docker-dockerfile-best-practices.md`
 
 (Use stack prefix when the bare name could collide across stacks; `python-style.md` is unique, `docker-dockerfile-best-practices.md` prefix is explicit for clarity.)
 
@@ -312,7 +312,7 @@ Env-var syntax: `${VAR}` (Claude Code style) becomes `{env:VAR}` (OpenCode style
 Merge order — same as Claude Code init:
 1. `core/mcp/mcp.partial.json` (always-on).
 2. `core/mcp/optional/*.mcp.json` (only those opted in during interview).
-3. `stacks/<s>/mcp/*.mcp.json` for every active stack.
+3. `stacks/<category>/<s>/mcp/*.mcp.json` for every active stack.
 4. Result deep-merged into `opencode.jsonc`'s `mcp:` section.
 
 Keep `_comment` as a JSONC line comment above each MCP entry (OpenCode accepts comments in `.jsonc`):

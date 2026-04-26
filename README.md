@@ -25,7 +25,7 @@ OpenCode, and plain `AGENTS.md` through the renderer skills in `skills/`.
 ```text
 dotclaude/
 ├── core/        # universal rules, skills, agents, hooks, MCP defaults
-├── stacks/      # language/framework/infra stack overlays
+├── stacks/      # categorized language/framework/infra stack overlays
 ├── skills/      # dotclaude framework skills and renderer skills
 ├── commands/    # slash-command wrappers
 ├── scripts/     # backing scripts and validators
@@ -84,8 +84,5 @@ GitHub Actions runs the same validator on pushes and pull requests.
 
 ## Status Notes
 
-The stack folders are still flat under `stacks/` because directory moves are
-currently blocked by Windows ACLs/OneDrive path ownership in this workspace.
-See [docs/windows-onedrive-locks.md](docs/windows-onedrive-locks.md) before
-retrying the P1.2 stack reorg.
-
+Stack folders are grouped by category under `stacks/`, while target-project
+source tags remain stable as `source: stacks/<name>` for sync compatibility.

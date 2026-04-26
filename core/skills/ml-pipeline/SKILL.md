@@ -22,8 +22,8 @@ underestimate.
 > - `core/skills/rag-architect/` — retrieval systems
 > - `core/skills/monitoring-expert/` — general telemetry plumbing
 > - `core/skills/sre-engineer/` — reliability posture
-> - `stacks/python/skills/python-pro/` — Python performance basics
-> - `stacks/kubernetes/skills/kubernetes-specialist/` — serving infra
+> - `stacks/lang/python/skills/python-pro/` — Python performance basics
+> - `stacks/infra/kubernetes/skills/kubernetes-specialist/` — serving infra
 
 ## When to use this skill
 

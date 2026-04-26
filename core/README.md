@@ -22,7 +22,7 @@ core/
 Every file here must pass all three:
 
 1. **Language-agnostic.** If it mentions a specific language or framework,
-   it belongs in `stacks/<lang>/`, not here.
+   it belongs in `stacks/<category>/<name>/`, not here.
 2. **Domain-agnostic.** No billing / auth / game / ML / embedded specifics.
    Those belong in project-specific rules.
 3. **Free.** No paid MCP servers, no paid-tier-only workflows.

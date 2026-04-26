@@ -59,7 +59,7 @@ overusing it is a common failure mode.
 
 ## Adding a new core MCP
 
-1. Verify it's free and universally useful. If it's language-specific, it belongs in `stacks/<lang>/mcp/` instead.
+1. Verify it's free and universally useful. If it's language-specific, it belongs in `stacks/<category>/<name>/mcp/` instead.
 2. If no credentials required → `mcp.partial.json`. If credentials required → `optional/<name>.mcp.json`.
 3. Add `skills/<name>-mcp/SKILL.md` explaining when to prefer it vs alternatives (e.g., `gh` CLI), common pitfalls, auth notes.
 4. If optional, update `references/scanning.md` in the init skill with the opt-in trigger.

@@ -5,22 +5,26 @@ produces a byte-identical `.claude/`.
 
 ## File-by-file behavior
 
+Physical stack sources live at `stacks/<category>/<s>/...`. The table uses
+`stacks/<s>` as the logical stack id and `source:` tag because initialized
+projects keep the stable flat source value.
+
 | Source | Target | Strategy |
 |---|---|---|
 | `core/rules/*.md` | `.claude/rules/*.md` | Copy, inject `source: core` into frontmatter |
-| `stacks/<s>/rules/*.md` | `.claude/rules/*.md` | Copy, inject `source: stacks/<s>` |
+| `stacks/<category>/<s>/rules/*.md` | `.claude/rules/*.md` | Copy, inject `source: stacks/<s>` |
 | `core/skills/**` | `.claude/skills/**` | Recursive copy, preserve folder-per-skill shape |
-| `stacks/<s>/skills/**` | `.claude/skills/**` | Recursive copy |
+| `stacks/<category>/<s>/skills/**` | `.claude/skills/**` | Recursive copy |
 | `core/mcp/skills/**` | `.claude/skills/**` | Copy only if MCP opted in |
-| `stacks/<s>/mcp/skills/**` | `.claude/skills/**` | Copy only if MCP opted in |
+| `stacks/<category>/<s>/mcp/skills/**` | `.claude/skills/**` | Copy only if MCP opted in |
 | `core/agents/*.md` | `.claude/agents/*.md` | Copy + source tag |
-| `stacks/<s>/agents/*.md` | `.claude/agents/*.md` | Copy + source tag |
+| `stacks/<category>/<s>/agents/*.md` | `.claude/agents/*.md` | Copy + source tag |
 | `core/hooks/*` | `.claude/hooks/*` | Copy, preserve executable bit |
-| `stacks/<s>/hooks/*` | `.claude/hooks/*` | Copy, preserve executable bit |
+| `stacks/<category>/<s>/hooks/*` | `.claude/hooks/*` | Copy, preserve executable bit |
 | `scripts/dotclaude-permissions-audit.sh` (and any future `scripts/*.sh`) | `.claude/scripts/*.sh` | Copy, preserve executable bit. Backs the matching slash command. |
-| `core/settings.partial.json` + `stacks/<s>/settings.partial.json` | `.claude/settings.json` | Deep-merge (see below) |
-| `core/mcp/mcp.partial.json` + opted-in optionals + `stacks/<s>/mcp/*.mcp.json` | `.mcp.json` at project root | Deep-merge `mcpServers` map |
-| `core/CLAUDE.base.md` + `stacks/<s>/CLAUDE.stack.md` + interview | `.claude/CLAUDE.md` | Template render with three sections |
+| `core/settings.partial.json` + `stacks/<category>/<s>/settings.partial.json` | `.claude/settings.json` | Deep-merge (see below) |
+| `core/mcp/mcp.partial.json` + opted-in optionals + `stacks/<category>/<s>/mcp/*.mcp.json` | `.mcp.json` at project root | Deep-merge `mcpServers` map |
+| `core/CLAUDE.base.md` + `stacks/<category>/<s>/CLAUDE.stack.md` + interview | `.claude/CLAUDE.md` | Template render with three sections |
 
 ## Deep-merge rules
 

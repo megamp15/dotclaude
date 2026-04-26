@@ -20,7 +20,7 @@ Postgres, MySQL, SQL Server, or Snowflake.
 > - `core/skills/postgres-pro/` — PostgreSQL-specific expertise (EXPLAIN,
 >   JSONB, locking, partitioning)
 > - `core/rules/database.md` — cross-project DB conventions
-> - `stacks/fastapi/skills/fastapi-expert/references/async-sqlalchemy.md` —
+> - `stacks/backend/fastapi/skills/fastapi-expert/references/async-sqlalchemy.md` —
 >   SQLAlchemy query patterns
 > - `core/skills/architect/` — when the question is really
 >   "should this be a query or an app computation"

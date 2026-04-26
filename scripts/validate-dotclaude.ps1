@@ -114,6 +114,37 @@ foreach ($file in $flatStackSkills) {
   Add-Failure "Flat stack skill should be folder form: $($file.FullName)"
 }
 
+# Stack layout validation: physical stack folders live one level below a
+# category, but source tags remain source: stacks/<name>.
+$allowedStackCategories = @("backend", "desktop", "frontend", "infra", "lang", "ml")
+$stacksRoot = Join-Path $Root "stacks"
+if (Test-Path -LiteralPath $stacksRoot) {
+  $topLevelStackDirs = Get-ChildItem -LiteralPath $stacksRoot -Directory
+  foreach ($dir in $topLevelStackDirs) {
+    if ($allowedStackCategories -notcontains $dir.Name) {
+      Add-Failure "Top-level stack directory should be under a category: $($dir.FullName)"
+    }
+  }
+
+  foreach ($category in $allowedStackCategories) {
+    $categoryPath = Join-Path $stacksRoot $category
+    if (-not (Test-Path -LiteralPath $categoryPath)) {
+      Add-Failure "Missing stack category directory: $category"
+      continue
+    }
+    foreach ($stack in Get-ChildItem -LiteralPath $categoryPath -Directory) {
+      $claude = Join-Path $stack.FullName "CLAUDE.stack.md"
+      $settings = Join-Path $stack.FullName "settings.partial.json"
+      if (-not (Test-Path -LiteralPath $claude)) {
+        Add-Failure "Stack missing CLAUDE.stack.md: $($stack.FullName)"
+      }
+      if (-not (Test-Path -LiteralPath $settings)) {
+        Add-Failure "Stack missing settings.partial.json: $($stack.FullName)"
+      }
+    }
+  }
+}
+
 # Command smoke checks for framework commands. A command may map to a same-name
 # framework skill, a core skill that gets copied into .claude/skills, or a
 # script.

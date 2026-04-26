@@ -41,8 +41,8 @@ applyTo: "**/*.ts,**/*.tsx"
 | Interview project context | `.github/copilot-instructions.md` (middle, between markers) | Owners, rate limits, sensitive paths, description |
 | `core/rules/*.md` (alwaysApply: true) | `.github/copilot-instructions.md` (appended sections) | These are universal; always-on is correct |
 | `core/rules/*.md` (triggered) | `.github/copilot-instructions.md` (appended sections, brief) | Copilot has no intent trigger; include but mark as "applies when…" |
-| `stacks/<s>/CLAUDE.stack.md` | `.github/instructions/<s>.instructions.md` (top) | `applyTo:` from stack's canonical globs |
-| `stacks/<s>/rules/*.md` | `.github/instructions/<s>.instructions.md` (sections) | Same file; glob-scoped |
+| `stacks/<category>/<s>/CLAUDE.stack.md` | `.github/instructions/<s>.instructions.md` (top) | `applyTo:` from stack's canonical globs |
+| `stacks/<category>/<s>/rules/*.md` | `.github/instructions/<s>.instructions.md` (sections) | Same file; glob-scoped |
 | `core/skills/<name>/SKILL.md` | `.github/copilot-instructions.md` (# Workflows section) | Each skill summarized in one short paragraph |
 | `core/skills/<name>/references/*.md` | (skipped, but referenced) | Summary in workflows section; full content not included |
 | `core/agents/<name>.md` | `.github/copilot-instructions.md` (# Review personas section) | Condensed from 100+ lines to one paragraph each |
@@ -144,23 +144,23 @@ applyTo: "**/*.py,**/pyproject.toml,**/requirements*.txt"
 
 # Python conventions
 
-<body from stacks/python/CLAUDE.stack.md, condensed>
+<body from stacks/lang/python/CLAUDE.stack.md, condensed>
 
 ## Style
 
-<from stacks/python/rules/python-style.md>
+<from stacks/lang/python/rules/python-style.md>
 
 ## Async patterns
 
-<from stacks/python/rules/async-patterns.md>
+<from stacks/lang/python/rules/async-patterns.md>
 
 ## Testing (Python)
 
-<relevant extracts from stacks/python/skills/python-pro/references/testing.md "Debugging a failing test" — tight bullets>
+<relevant extracts from stacks/lang/python/skills/python-pro/references/testing.md "Debugging a failing test" — tight bullets>
 
 ## Deps
 
-<from stacks/python/skills/python-pro/references/packaging.md "Common uv workflows" — brief>
+<from stacks/lang/python/skills/python-pro/references/packaging.md "Common uv workflows" — brief>
 ```
 
 `applyTo` globs per stack:

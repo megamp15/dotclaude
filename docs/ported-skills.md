@@ -31,15 +31,14 @@ Convention:
 | `core/skills/` | `chaos-engineer` | `chaos-engineer` |
 | `core/skills/` | `debugging` | `debugging-wizard` plus dotclaude `debug-fix` |
 | `core/skills/` | `legacy-modernizer` | `legacy-modernizer` |
-| `stacks/python/skills/` | `python-pro` | `python-pro` |
-| `stacks/node-ts/skills/` | `typescript-pro` | `typescript-pro` |
-| `stacks/terraform/skills/` | `terraform-engineer` | `terraform-engineer` |
-| `stacks/kubernetes/skills/` | `kubernetes-specialist` | `kubernetes-specialist` |
-| `stacks/react/skills/` | `react-expert` | `react-expert` |
-| `stacks/nextjs/skills/` | `nextjs-developer` | `nextjs-developer` |
-| `stacks/angular/skills/` | `angular-architect` | `angular-architect` |
-| `stacks/fastapi/skills/` | `fastapi-expert` | `fastapi-expert` |
+| `stacks/lang/python/skills/` | `python-pro` | `python-pro` |
+| `stacks/lang/node-ts/skills/` | `typescript-pro` | `typescript-pro` |
+| `stacks/infra/terraform/skills/` | `terraform-engineer` | `terraform-engineer` |
+| `stacks/infra/kubernetes/skills/` | `kubernetes-specialist` | `kubernetes-specialist` |
+| `stacks/frontend/react/skills/` | `react-expert` | `react-expert` |
+| `stacks/frontend/nextjs/skills/` | `nextjs-developer` | `nextjs-developer` |
+| `stacks/frontend/angular/skills/` | `angular-architect` | `angular-architect` |
+| `stacks/backend/fastapi/skills/` | `fastapi-expert` | `fastapi-expert` |
 
 Each adapted skill should carry `ported-from:`, `ported-at:`, and
 `adapted: true` in frontmatter when it borrows significant structure.
-

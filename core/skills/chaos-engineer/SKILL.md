@@ -21,7 +21,7 @@ resilient as we claim.
 >   chaos engineering feeds PRR
 > - `core/skills/monitoring-expert/` — you need observability to
 >   measure steady state
-> - `stacks/kubernetes/skills/kubernetes-specialist/` — K8s fault
+> - `stacks/infra/kubernetes/skills/kubernetes-specialist/` — K8s fault
 >   tools
 
 ## When to use this skill

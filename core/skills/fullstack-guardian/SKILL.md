@@ -34,7 +34,7 @@ feature with security done correctly end-to-end.
 
 **Not for:**
 - Pure backend refactor → `refactor` + stack skill.
-- Pure frontend change → stack skill (e.g. `stacks/react/`).
+- Pure frontend change → stack skill (e.g. `stacks/frontend/react/`).
 - Unknown scope → run `feature-forge` first.
 - Significant architecture decisions → `architect`.
 - Full security posture review → `security (audit mode)`.
@@ -46,7 +46,7 @@ feature with security done correctly end-to-end.
 - Read the spec or user request. If no spec, run `feature-forge` first.
 - List the surface touched: endpoints, DB tables, components, routes.
 - Identify the stacks involved and load their rules
-  (e.g. `stacks/react/`, `stacks/fastapi/`, `stacks/nextjs/`).
+  (e.g. `stacks/frontend/react/`, `stacks/backend/fastapi/`, `stacks/frontend/nextjs/`).
 
 ### 2. Three-perspective design (short)
 

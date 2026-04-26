@@ -87,7 +87,7 @@ If the upstream template changes, that's a note in sync's output ("core/template
 Re-merge deterministically:
 
 1. Start with `core/settings.partial.json`.
-2. For each active stack, deep-merge `stacks/<name>/settings.partial.json`.
+2. For each active stack, deep-merge `stacks/<category>/<name>/settings.partial.json`.
 3. Apply the same merge rules used by init (see `skills/dotclaude-init/references/merge.md#deep-merge-rules`):
    - `permissions.allow` — union, deduped, sorted.
    - `permissions.deny` — union, deduped.
@@ -106,7 +106,7 @@ Same model:
 
 1. `core/mcp/mcp.partial.json` is the always-on base.
 2. Add each opted-in optional under `core/mcp/optional/`.
-3. Add each opted-in stack-scoped `stacks/<s>/mcp/optional/*.mcp.json`.
+3. Add each opted-in stack-scoped `stacks/<category>/<s>/mcp/optional/*.mcp.json`.
 4. Deep-merge `mcpServers`; stack servers win over core on name collision.
 
 **Preserve project additions** (a `mcpServers` entry with no upstream equivalent). Warn about them in the diff; don't silently remove.
@@ -124,7 +124,7 @@ Init writes this structure:
 <core/CLAUDE.base.md content>
 
 <!-- source: stacks/<name> -->
-<stacks/<name>/CLAUDE.stack.md content>
+<stacks/<category>/<name>/CLAUDE.stack.md content>
 (repeat for each active stack)
 
 <!-- project-start -->

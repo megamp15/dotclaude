@@ -22,7 +22,7 @@ trace debugging, network interception, or CI architecture for e2e.
 >   e2e vs. integration
 > - `core/rules/accessibility.md` — role selectors mean your app must
 >   have proper semantics
-> - `stacks/react/skills/react-expert/` — Testing Library complement
+> - `stacks/frontend/react/skills/react-expert/` — Testing Library complement
 >   for component tests
 
 ## When to use this skill

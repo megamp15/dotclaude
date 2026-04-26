@@ -3,9 +3,9 @@
 This checkout is under `OneDrive\Desktop`, and directory operations can fail
 with `Access is denied` when OneDrive, Explorer, or Windows ACLs hold the tree.
 
-In this session, directory moves under `stacks/` failed because the sandbox user
-only had `ReadAndExecute` on existing directories. That is why P1.2 could not
-complete even though file edits were possible.
+In this workspace, directory moves under `stacks/` initially failed because the
+sandbox user only had `ReadAndExecute` on existing directories. A targeted ACL
+grant plus `robocopy /MOVE` was needed to complete P1.2.
 
 ## Fast Fixes to Try
 
@@ -47,9 +47,9 @@ icacls "$env:USERPROFILE\OneDrive\Desktop\MP\CODE\dotclaude" /grant "$($env:USER
 
 Then restart the terminal/agent session and retry the stack reorg.
 
-## P1.2 Intended Move
+## P1.2 Layout
 
-Once unlocked, move stacks into category folders while keeping `source:` tags
+Stacks are now grouped into category folders while keeping `source:` tags
 stable:
 
 ```text

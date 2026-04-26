@@ -104,7 +104,7 @@ threat-model reference together.
    │     ├── /dotclaude-permissions-audit          ← see what's already configured
    │     ├── add specific allow rule to .claude/settings.local.json
    │     │   (gitignored — your machine, your call)
-   │     └── if pattern is universal: PR it to core/ or stacks/<lang>/
+   │     └── if pattern is universal: PR it to core/ or stacks/<category>/<name>/
    │
    └── surprise (agent did something unwanted)
          │
@@ -119,7 +119,7 @@ what would change if you applied the dotclaude defaults today.
 
 ## Stack-specific tuning notes
 
-Each stack overlay (`stacks/<lang>/settings.partial.json`) ships its
+Each stack overlay (`stacks/<category>/<name>/settings.partial.json`) ships its
 own balance. The headline trade-offs:
 
 | Stack | Allow philosophy | Notable denies |
@@ -142,7 +142,7 @@ when you tighten an allow.
 | `.claude/settings.json` (committed) | The rule is correct **for everyone on this project**. E.g., "always allow `make test`." |
 | `.claude/settings.local.json` (gitignored) | The rule is **your habit**. E.g., you use `vim` heavily and want `Bash(vim:*)` allowed. |
 | `core/` (PR to dotclaude) | The rule applies to **every project everywhere**. E.g., "`tree` is read-only safe." |
-| `stacks/<lang>/` (PR to dotclaude) | The rule applies to **every project using that stack**. E.g., "`hadolint` is safe." |
+| `stacks/<category>/<name>/` (PR to dotclaude) | The rule applies to **every project using that stack**. E.g., "`hadolint` is safe." |
 
 Don't put project-specific business rules into `core/`. Don't put
 universal rules into a single project's `.claude/`. The split scales.
@@ -180,6 +180,6 @@ universal rules into a single project's `.claude/`. The split scales.
 
 - `core/settings.partial.json` — universal allow/deny set.
 - `core/hooks/block-dangerous-commands.sh` — the runtime safety net.
-- `stacks/<lang>/settings.partial.json` — stack overlays.
+- `stacks/<category>/<name>/settings.partial.json` — stack overlays.
 - `commands/dotclaude-permissions-audit.md` — the `/dotclaude-permissions-audit`
   slash command.

@@ -29,7 +29,7 @@ nearly always a better starting point than a distributed monolith.
 **Not for:**
 - Cloud service selection → `architect` cloud mode
 - General system design or ADRs → `architect` system mode
-- Kubernetes manifest hygiene → `stacks/kubernetes/`
+- Kubernetes manifest hygiene → `stacks/infra/kubernetes/`
 - API surface design → `architect` rest-api or graphql mode
 
 ## Core workflow

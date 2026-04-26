@@ -22,7 +22,7 @@ query plans, locking, and operational realities.
 > - `core/rules/database.md` — cross-project DB conventions
 > - `core/skills/architect/` — when the question is really "what's the
 >   API contract"
-> - `stacks/fastapi/skills/fastapi-expert/references/async-sqlalchemy.md` —
+> - `stacks/backend/fastapi/skills/fastapi-expert/references/async-sqlalchemy.md` —
 >   Postgres via async SQLAlchemy
 
 ## When to use this skill

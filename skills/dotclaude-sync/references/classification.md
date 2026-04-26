@@ -72,9 +72,16 @@ Example:
 
 - Target file: `.claude/rules/python-style.md`
 - Its `source:` value: `stacks/python`
-- Upstream file: `$DOTCLAUDE_HOME/stacks/python/rules/python-style.md`
+- Upstream file: `$DOTCLAUDE_HOME/stacks/lang/python/rules/python-style.md`
 
-Rule: strip `.claude/` from the target path, prepend `$DOTCLAUDE_HOME/<source>/`.
+Rule: strip `.claude/` from the target path, then resolve the source root:
+
+- `core` sources map directly to `$DOTCLAUDE_HOME/core/...`.
+- `stacks/<name>` sources map through the categorized stack layout
+  (`stacks/<category>/<name>/...`).
+
+Do not rewrite target `source:` tags to include the category. The category is
+an upstream storage detail.
 
 ### Edge cases for path resolution
 

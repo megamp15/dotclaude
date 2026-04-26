@@ -10,16 +10,16 @@ Deterministic: same inputs, same `.cursor/` output.
 | `core/CLAUDE.base.md` | `AGENTS.md` (top section) + `.cursor/rules/00-base.mdc` (summary) | always | AGENTS.md has full text; 00-base.mdc is a 50-line boiled-down version for `alwaysApply: true` |
 | `core/rules/*.md` (alwaysApply: true) | `.cursor/rules/10-<name>.mdc` | `alwaysApply: true` | One-to-one copy of body; frontmatter regenerated |
 | `core/rules/*.md` (alwaysApply: false, triggers) | `.cursor/rules/10-<name>.mdc` | intelligent (description only) | `triggers:` concatenated into `description:` |
-| `stacks/<s>/CLAUDE.stack.md` | `AGENTS.md` (stack section) | always (via AGENTS.md) | Same content, rendered under `## Stack: <s>` heading |
-| `stacks/<s>/rules/*.md` (alwaysApply: true) | `.cursor/rules/20-<s>-<name>.mdc` | `alwaysApply: true` + globs | Inherits globs from source frontmatter if present, else stack's default globs |
-| `stacks/<s>/rules/*.md` (with globs) | `.cursor/rules/20-<s>-<name>.mdc` | globs | Pass through the source's globs |
+| `stacks/<category>/<s>/CLAUDE.stack.md` | `AGENTS.md` (stack section) | always (via AGENTS.md) | Same content, rendered under `## Stack: <s>` heading |
+| `stacks/<category>/<s>/rules/*.md` (alwaysApply: true) | `.cursor/rules/20-<s>-<name>.mdc` | `alwaysApply: true` + globs | Inherits globs from source frontmatter if present, else stack's default globs |
+| `stacks/<category>/<s>/rules/*.md` (with globs) | `.cursor/rules/20-<s>-<name>.mdc` | globs | Pass through the source's globs |
 | `core/skills/<name>/SKILL.md` | `.cursor/rules/30-<name>.mdc` | intelligent | `description:` from SKILL's `description:` field |
 | `core/skills/<name>/references/*.md` | appended to `30-<name>.mdc` OR skipped | — | See "References handling" below |
-| `stacks/<s>/skills/<name>.md` (flat skill) | `.cursor/rules/30-<s>-<name>.mdc` | intelligent (+globs for stack) | |
+| `stacks/<category>/<s>/skills/<name>.md` (flat skill) | `.cursor/rules/30-<s>-<name>.mdc` | intelligent (+globs for stack) | |
 | `core/agents/<name>.md` | `.cursor/rules/40-<name>.mdc` | manual (`@<name>`) | Body preserved; described as a persona to invoke |
-| `stacks/<s>/agents/<name>.md` | `.cursor/rules/40-<s>-<name>.mdc` | manual | |
+| `stacks/<category>/<s>/agents/<name>.md` | `.cursor/rules/40-<s>-<name>.mdc` | manual | |
 | `core/hooks/*.sh` | (skipped) | — | Warn. Optional: write to `scripts/dotclaude-hooks/` for manual use. |
-| `stacks/<s>/hooks/*.sh` | (skipped) | — | Same |
+| `stacks/<category>/<s>/hooks/*.sh` | (skipped) | — | Same |
 | `core/mcp/mcp.partial.json` + opted optionals + stack MCPs | `.cursor/mcp.json` | — | Deep-merge same rules; strip `_comment` |
 | `core/mcp/skills/<name>/SKILL.md` | `.cursor/rules/30-mcp-<name>.mdc` | intelligent | Only if MCP opted in |
 | `core/templates/*.example` | (skipped) | — | Cursor has its own user-scope settings |
@@ -182,11 +182,11 @@ Target structure:
 
 ## Stack: python
 
-<core content from stacks/python/CLAUDE.stack.md>
+<core content from stacks/lang/python/CLAUDE.stack.md>
 
 ## Stack: docker
 
-<core content from stacks/docker/CLAUDE.stack.md>
+<core content from stacks/infra/docker/CLAUDE.stack.md>
 
 ## Guardrails
 

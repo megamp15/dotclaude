@@ -20,7 +20,7 @@ operational realities.
 >
 > - `core/skills/sre-engineer/` — SLO, incident response
 > - `core/skills/monitoring-expert/` — observability
-> - `stacks/kubernetes/skills/kubernetes-specialist/` — horizontal
+> - `stacks/infra/kubernetes/skills/kubernetes-specialist/` — horizontal
 >   scaling + Ingress for websockets
 > - `core/rules/security.md` — auth + CSRF equivalent for WS
 

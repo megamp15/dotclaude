@@ -8,6 +8,10 @@ Stacks are **layered**, not mutually exclusive. A project can legitimately be
 `python + docker + terraform + github-actions` and should get rules from all
 four. Pick the language stack as primary; layer infra stacks on top.
 
+Physical stack folders are grouped by category (`stacks/lang/python`,
+`stacks/infra/docker`, etc.). The stack id and target `source:` tag stay flat:
+`python` maps to `source: stacks/python`.
+
 ### Language stacks
 
 | Evidence | Stack |
@@ -30,6 +34,7 @@ four. Pick the language stack as primary; layer infra stacks on top.
 | `.github/workflows/*.y*ml` | `github-actions` |
 | `kind: Deployment`, `kind: Service`, `kind: StatefulSet`, `apiVersion: apps/v1` in yaml; or `kustomization.yaml`, `Chart.yaml`, `helmfile.yaml` | `kubernetes` |
 | `aws-cdk.json`, `cdk.json`, `serverless.yml`, `samconfig.toml`, `aws_*` resources in `*.tf`, `*.aws/` dir, `AWS_*` env vars in config | `aws` |
+| `wrangler.toml`, `wrangler.json`, `worker-configuration.d.ts`, or `@cloudflare/workers-types` | `cloudflare-workers` |
 
 Apply every matching infra stack — their rules don't conflict with the
 language stack's.
@@ -41,6 +46,7 @@ language stack's.
 | `"react"` in `package.json` deps | `react` |
 | `"next"` in `package.json` deps, or `app/` dir with `layout.tsx` + `page.tsx`, or `next.config.{js,mjs,ts}` | `nextjs` (layers on top of `react` + `node-ts`) |
 | `"@angular/core"` in `package.json`, `angular.json` | `angular` |
+| `"svelte"` or `"@sveltejs/kit"` in `package.json`, `svelte.config.*` | `svelte` |
 | `hx-get` / `hx-post` / `hx-target` attrs in templates; `htmx.org` in deps or a CDN `<script>` | `htmx-alpine` |
 | `x-data` / `x-show` / `x-on:` attrs; `alpinejs` in deps or CDN `<script>` | `htmx-alpine` |
 | `"reflex"` in `requirements.txt` / `pyproject.toml`, `rxconfig.py`, `import reflex as rx` | `reflex` |
@@ -50,6 +56,12 @@ language stack's.
 | Evidence | Stack |
 |---|---|
 | `from fastapi` / `import fastapi` / `FastAPI(` in `*.py`, or `fastapi` in `pyproject.toml` / `requirements.txt` | `fastapi` (layers on top of `python`) |
+
+### Desktop app stacks
+
+| Evidence | Stack |
+|---|---|
+| `src-tauri/`, `tauri.conf.*`, or `@tauri-apps/api` in `package.json` | `tauri` |
 
 ### ML / inference stacks (additive to python)
 
@@ -70,9 +82,10 @@ Grep the source files for import/config patterns:
 - `import torch`, `from transformers` → `ml`
 
 **Node**
-- `"next"` in package.json → `next` (also triggers `stacks/nextjs`)
-- `"react"` in package.json → `react` (also triggers `stacks/react`)
-- `"@angular/core"` in package.json → `angular` (also triggers `stacks/angular`)
+- `"next"` in package.json → `next` (also triggers stack id `nextjs`)
+- `"react"` in package.json → `react` (also triggers stack id `react`)
+- `"@angular/core"` in package.json → `angular` (also triggers stack id `angular`)
+- `"svelte"` / `"@sveltejs/kit"` in package.json → `svelte`
 - `"@nestjs/core"` → `nestjs`
 - `"express"` → `express`
 
@@ -95,8 +108,8 @@ However, init can **proactively suggest** hubs based on scan findings:
 
 | Signal | Proactively mention hub |
 |---|---|
-| `stacks/pytorch` or `stacks/vllm-ollama` matched; or `import vllm`, `OLLAMA_*`, `gguf`, `awq`, `gptq` in repo | `llm-serving` |
-| `stacks/kubernetes` matched; or Proxmox / Talos / k3s evidence; or homelab-ish topology (`helmfile.yaml`, `flux-system/`, `argocd/`) | `homelab-infra` |
+| stack id `pytorch` or `vllm-ollama` matched; or `import vllm`, `OLLAMA_*`, `gguf`, `awq`, `gptq` in repo | `llm-serving` |
+| stack id `kubernetes` matched; or Proxmox / Talos / k3s evidence; or homelab-ish topology (`helmfile.yaml`, `flux-system/`, `argocd/`) | `homelab-infra` |
 
 "Proactively mention" means print a one-line note in the init summary
 ("Heads up: the `llm-serving` domain skill is available and will
